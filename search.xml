@@ -19,7 +19,7 @@
 ]]></content>
   </entry>
   <entry>
-    <title>try</title>
+    <title>微分方程</title>
     <url>/2024/02/07/%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="一阶线性微分"><a href="#一阶线性微分" class="headerlink" title="一阶线性微分"></a>一阶线性微分</h1><h2 id="可分离变量类"><a href="#可分离变量类" class="headerlink" title="可分离变量类"></a>可分离变量类</h2><p>形如$\frac{\mathrm{d}y}{\mathrm{d}x}&#x3D;f(x)g(y)：略$</p>
 <h2 id="直接分部积分法"><a href="#直接分部积分法" class="headerlink" title="直接分部积分法"></a>直接分部积分法</h2><p>一阶微分方程拥有显式的分部积分关系：$u\frac{\mathrm{d}v}{\mathrm{d}x}+v\frac{\mathrm{d}u}{\mathrm{d}x}&#x3D;\frac{\mathrm{d}}{\mathrm{d}x}(uv)&#x3D;f(x)$；两边同时积分$\int u\frac{\mathrm{d}v}{\mathrm{d}x}+\int v\frac{\mathrm{d}u}{\mathrm{d}x}&#x3D;uv&#x3D;\int f(x)$；即根据$uv&#x3D;\int f(x)$解出y的值（u,v是y的函数）<br>ex:$x^3\frac{\mathrm{d}y}{\mathrm{d}x}+3x^2y&#x3D;sinx$<br>解：$\begin{aligned}<br>&amp;u&#x3D;x^3\text{, }v&#x3D;y\text{,则: }uv&#x3D;x^3y&#x3D;\int sinxdx&#x3D;-cosx+c\mathrm{~.} \<br>&amp;\text{得:}\quad y&#x3D;-\frac{cosx}{x^3}+\frac c{x^3}.<br>\end{aligned}$</p>
@@ -35,5 +35,8 @@
 <p>知道特解的形式后，可以用待定系数法，将特解回代到原方程中，得到未知的系数；</p>
 <p>还有一种情况要注意：特解与齐次解的某一项线性相关（必与齐次解线性相关），那么给特解乘个x</p>
 ]]></content>
+      <tags>
+        <tag>math</tag>
+      </tags>
   </entry>
 </search>
