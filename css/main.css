@@ -1636,7 +1636,6 @@ pre code {
 }
 .back-to-top span {
   margin-right: 8px;
-  display: none;
 }
 .back-to-top .fa {
   text-align: center;
@@ -1660,6 +1659,16 @@ pre code {
 }
 .back-to-top.back-to-top-on {
   bottom: 30px;
+}
+.reading-progress-bar {
+  --progress: 0;
+  background: #37c6c0;
+  height: 3px;
+  position: fixed;
+  z-index: 50;
+  width: var(--progress);
+  left: 0;
+  top: 0;
 }
 .rtl.post-body p,
 .rtl.post-body a,
@@ -2451,6 +2460,13 @@ mark.search-keyword {
   color: #ff2a2a;
   font-weight: bold;
 }
+mjx-container[jax='CHTML'][display='true'],
+.has-jax {
+  overflow: auto hidden;
+}
+mjx-container[display='true'] + br {
+  display: none;
+}
 .use-motion .animated {
   animation-fill-mode: none;
   visibility: inherit;
@@ -2460,7 +2476,7 @@ mark.search-keyword {
 }
 header.header {
   background: var(--content-bg-color);
-  border-radius: initial;
+  border-radius: 20px 20px 20px 20px;
   box-shadow: initial;
 }
 @media (max-width: 991px) {
@@ -2497,7 +2513,7 @@ header.header {
   }
 }
 .main-inner {
-  border-radius: initial;
+  border-radius: 20px 20px 20px 20px;
   box-sizing: border-box;
   width: calc(100% - 252px);
 }
@@ -2587,7 +2603,7 @@ header.header {
 .menu .menu-item .badge {
   background: #ccc;
   border-radius: 10px;
-  color: var(--content-bg-color);
+  color: rgba(245,245,245,0.9);
   float: right;
   padding: 2px 5px;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
@@ -2637,8 +2653,8 @@ header.header {
   }
 }
 .sidebar-inner {
-  background: var(--content-bg-color);
-  border-radius: initial;
+  background: rgba(245,245,245,0.9);
+  border-radius: 20px;
   box-shadow: initial;
   box-sizing: border-box;
   color: var(--text-color);
@@ -2688,10 +2704,10 @@ header.header {
   display: block;
 }
 .links-of-author-item a:hover {
-  background: var(--body-bg-color);
+  background: rgba(245,245,245,0.9);
 }
 .main-inner {
-  background: var(--content-bg-color);
+  background: rgba(245,245,245,0.9);
   box-shadow: initial;
   padding: 40px;
 }
@@ -2710,4 +2726,36 @@ header.header {
   .pagination {
     margin-bottom: 10px;
   }
+}
+body {
+  background: url("/images/wallhaven-2yjlvy.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 100% 100%;
+  background-size: cover;
+}
+.content-wrap {
+  opacity: 0.8;
+}
+.sidebar-inner {
+  background: rgba(255,255,255,0.7) none repeat scroll !important;
+}
+.header-inner {
+  background: rgba(255,255,255,0.8);
+}
+.popup {
+  opacity: 0.8;
+}
+.post-block {
+  background: rgba(255,255,255,0.7) none repeat scroll !important;
+}
+.comments {
+  background: rgba(255,255,255,0.7) none repeat scroll !important;
+}
+.post {
+  margin-top: 60px;
+  padding: 20px;
+  margin-bottom: 60px;
+  -webkit-box-shadow: 0 0 5px #788072;
+  -moz-box-shadow: 0 0 5px rgba(202,203,204,0.5);
 }

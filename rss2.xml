@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Zeins&#39;s Blog</title>
+    <link>https://zeinsshiri.github.io/</link>
+    
+    <atom:link href="https://zeinsshiri.github.io/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description></description>
+    <pubDate>Wed, 07 Feb 2024 04:06:16 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>try</title>
+      <link>https://zeinsshiri.github.io/2024/02/07/%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/</link>
+      <guid>https://zeinsshiri.github.io/2024/02/07/%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/</guid>
+      <pubDate>Tue, 06 Feb 2024 21:17:31 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h1 id=&quot;一阶线性微分&quot;&gt;&lt;a href=&quot;#一阶线性微分&quot; class=&quot;headerlink&quot; title=&quot;一阶线性微分&quot;&gt;&lt;/a&gt;一阶线性微分&lt;/h1&gt;&lt;h2 id=&quot;可分离变量类&quot;&gt;&lt;a href=&quot;#可分离变量类&quot; class=&quot;headerlink&quot; titl</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="一阶线性微分"><a href="#一阶线性微分" class="headerlink" title="一阶线性微分"></a>一阶线性微分</h1><h2 id="可分离变量类"><a href="#可分离变量类" class="headerlink" title="可分离变量类"></a>可分离变量类</h2><p>形如$\frac{\mathrm{d}y}{\mathrm{d}x}&#x3D;f(x)g(y)：略$</p><h2 id="直接分部积分法"><a href="#直接分部积分法" class="headerlink" title="直接分部积分法"></a>直接分部积分法</h2><p>一阶微分方程拥有显式的分部积分关系：$u\frac{\mathrm{d}v}{\mathrm{d}x}+v\frac{\mathrm{d}u}{\mathrm{d}x}&#x3D;\frac{\mathrm{d}}{\mathrm{d}x}(uv)&#x3D;f(x)$；两边同时积分$\int u\frac{\mathrm{d}v}{\mathrm{d}x}+\int v\frac{\mathrm{d}u}{\mathrm{d}x}&#x3D;uv&#x3D;\int f(x)$；即根据$uv&#x3D;\int f(x)$解出y的值（u,v是y的函数）<br>ex:$x^3\frac{\mathrm{d}y}{\mathrm{d}x}+3x^2y&#x3D;sinx$<br>解：$\begin{aligned}<br>&amp;u&#x3D;x^3\text{, }v&#x3D;y\text{,则: }uv&#x3D;x^3y&#x3D;\int sinxdx&#x3D;-cosx+c\mathrm{~.} \<br>&amp;\text{得:}\quad y&#x3D;-\frac{cosx}{x^3}+\frac c{x^3}.<br>\end{aligned}$</p><h2 id="「凑」分部积分法"><a href="#「凑」分部积分法" class="headerlink" title="「凑」分部积分法"></a>「凑」分部积分法</h2><p>形如$\frac{\mathrm{d}y}{\mathrm{d}x}+f(x)y&#x3D;g(x)$的1阶微分方程的分部积分关系不是显式的；<br>令$h(x)\frac{\mathrm{d}y}{\mathrm{d}x}+h(x)f(x)y&#x3D;g(x)h(x)$；存在（1）$u’(x)&#x3D;h’(x)&#x3D;h(x)f(x)$关系;<br>根据（1），$e^{\int f(x)dx}&#x3D;h(x)$<br>⇒$ e^{\int f(x)dx} \frac{\mathrm{d} y}{\mathrm{d} x} + e^{\int f(x)dx}  f(x)y&#x3D;g(x) e^{\int f(x)dx}  $<br>根据分部积分$uv&#x3D;\int g(x)h(x)$<br>⇒$e^{\int f(x)dx}y&#x3D;\int g(x)e^{\int f(x)dx}$<br>⇒$ y&#x3D;\frac{\int g(x) e^{\int f(x)dx}dx}{e^{\int f(x)dx}}  $&#x20;<br>此类方程的步骤总结为：</p><p><img src="/image/image_fXPBKGEyMO.png"></p><h1 id="二阶线性微分"><a href="#二阶线性微分" class="headerlink" title="二阶线性微分"></a>二阶线性微分</h1><p>微分算子是线性算子：$ \forall k\in R,\frac{\mathrm{d} }{\mathrm{d} x} (\sum_{i&#x3D;1}^{n} k_i\cdot f_{i}(x))&#x3D;\sum_{i&#x3D;1}^{n} k_i\frac{\mathrm{d}  f_{i}(x)}{\mathrm{d} x}  $</p><h2 id="常系数齐次微分-a-frac-mathrm-d-2y-mathrm-d-x-2-b-frac-mathrm-d-y-mathrm-d-x-cy-0；a≠0"><a href="#常系数齐次微分-a-frac-mathrm-d-2y-mathrm-d-x-2-b-frac-mathrm-d-y-mathrm-d-x-cy-0；a≠0" class="headerlink" title="常系数齐次微分$a\frac{\mathrm{d} ^2y}{\mathrm{d} x^2} +b\frac{\mathrm{d} y}{\mathrm{d} x} +cy&#x3D;0；a≠0$"></a>常系数齐次微分$a\frac{\mathrm{d} ^2y}{\mathrm{d} x^2} +b\frac{\mathrm{d} y}{\mathrm{d} x} +cy&#x3D;0；a≠0$</h2><p>（1）解向量组的秩为2？？？？？<br>（2）特解$y_1&#x3D;A$$e^{kx}$(猜的)；另一解$y_2$必须要与$y_1$线性无关才能构成通解：$\frac{y_1}{y_2}必不能为常数$</p><p>1）令$y&#x3D;e^{kx}\quad,\quad\frac{\mathrm{d}y}{\mathrm{d}x}&#x3D;ke^{kx}\quad,\quad\frac{\mathrm{d}^2y}{\mathrm{d}x^2}&#x3D;k^2e^{kx}$；待定系数<br>⇒$ ak^2e^{kx}+bke^{kx}+ce^{kx}&#x3D;0  $<br>⇒$e^{kx}(ak^2+bk+c)&#x3D;0$&#x20;<br>解出特征根(系数)：<br>$\Delta &gt; 0$：含有两个实根（$\alpha$，$\beta$）：得到$y_1&#x3D;e^{\alpha x}$和$y_2&#x3D;e^{\beta x}$：$ {\color{Red} y \color{Red} &#x3D; \color{Red} A \color{Red} e^{\color{Red}\alpha \color{Red} x} \color{Red} + \color{Red} B \color{Red} e^{\color{Red}\beta \color{Red} x} }  $（需$\frac{e^{\alpha x}}{e^{\beta x}} \ne c$）；$A,B\in R$$\Delta &#x3D;0$：含重根$y_{1}&#x3D;e^{\alpha x}$；（$\frac{e^{\alpha x}}{e^{\alpha x}} &#x3D;1$显然不行）<br><strong>设</strong>$\frac{y_2}{y_1}&#x3D; \varphi(x)$<strong>：寻找另一线性无关解</strong>${y_2}&#x3D; \varphi(x) {y_1}&#x3D; \varphi(x)e^{kx}$：<br>待定系数：$e^{kx}(a {\varphi}’’(x)+2ak {\varphi}’(x)+ak^2 {\varphi}(x)+b {\varphi}’(x)+bk {\varphi}(x) +c{\varphi}(x))&#x3D;0$<br>⇒解特征方程$(ak^2+bk+c) {\varphi}(x)+(2ak+b) {\varphi}’(x)+a {\varphi}’’(x)&#x3D;0$<br>⇒$(2ak+b) {\varphi}’(x)+a {\varphi}’’(x)&#x3D;0$；k是根知道可消<br>⇒${\varphi}’’(x)&#x3D;0$<br>⇒${\varphi}’(x)&#x3D;\int{\varphi}’’(x)dx&#x3D;c_1$<br>⇒${\varphi}(x)&#x3D;\int{\varphi}’(x)dx&#x3D;c_1x+c_2$<br>⇒$y_2&#x3D; (c_1x+c_2)y_1&#x3D; (c_1x+c_2)e^{\alpha x}$<br>随便代个数给$c_1,c_2$⇒$y_2&#x3D;xe^{\alpha x}$<br>⇒${y}&#x3D;Ay_1+By_2&#x3D;Ae^{\alpha x}+Bxe^{\alpha x} {&#x3D;} {(} { A} {  +} {B} {x} {)} {e}^{\alpha{x}}$</p><p>$\Delta &lt; 0$:有两个不同的共轭虚根系数$p+qi$，$p-qi$：<br>$y_1&#x3D;e^{(p+qi)x}&#x3D; e^{px}\cdot e^{iqx}$&#x3D;$e^{px}(cosqx+isinqx)$$y_2&#x3D;e^{px}\cdot e^{-iqx}&#x3D;e^{px}(cosqx-isinqx)$<br>到这一步其实就可以了，但还可以构造两个形式更好的线性无关解：<br>$y_3&#x3D;\frac{1}{2}(y_1+y_2)&#x3D;e^{px}cosqx$$y_4&#x3D;\frac{1}{2i}(y_1-y_2)&#x3D;e^{px}sinqx$$y&#x3D;Ay_3+By_4&#x3D;Ae^{px}cosqx+Be^{px}sinqx&#x3D;(Acosqx+Bsinqx)e^{px}$</p><p><img src="/image/image_ib78UT90AJ.png"></p><h2 id="常系数非齐次微分-a-frac-mathrm-d-2y-mathrm-d-x-2-b-frac-mathrm-d-y-mathrm-d-x-cy-f-x-；a≠0"><a href="#常系数非齐次微分-a-frac-mathrm-d-2y-mathrm-d-x-2-b-frac-mathrm-d-y-mathrm-d-x-cy-f-x-；a≠0" class="headerlink" title="常系数非齐次微分$a\frac{\mathrm{d} ^2y}{\mathrm{d} x^2} +b\frac{\mathrm{d} y}{\mathrm{d} x} +cy&#x3D;f(x)；a≠0$"></a>常系数非齐次微分$a\frac{\mathrm{d} ^2y}{\mathrm{d} x^2} +b\frac{\mathrm{d} y}{\mathrm{d} x} +cy&#x3D;f(x)；a≠0$</h2><p>尝试从齐次方程解推广到非齐：<br>1）假设有特解$y_1$使之成立：$a\frac{\mathrm{d} ^2}{\mathrm{d} x^2}y_{1} +b\frac{\mathrm{d} }{\mathrm{d} x} y_{1}+cy_{1}&#x3D;f(x)$<br>令$a\frac{\mathrm{d} ^2y}{\mathrm{d} x^2} +b\frac{\mathrm{d} y}{\mathrm{d} x} +cy$-$a\frac{\mathrm{d} ^2}{\mathrm{d} x^2}y_{1} +b\frac{\mathrm{d} }{\mathrm{d} x} y_{1}+cy_{1}&#x3D;f(x)$$-f(x)$构造齐次方程<br>⇒$a\frac{\mathrm{d} ^2}{\mathrm{d} x^2}(y-y_{1}) +b\frac{\mathrm{d} }{\mathrm{d} x} (y-y_{1}) +c(y-y_{1}) &#x3D;0$；可见齐次解$y_{2}&#x3D;y-y_{1}$与通解的关系<br>y的解为齐次解$y_2$+特解$y_1$<br>2）对于特解：前辈们一个个试出来了。。。。</p><p><img src="/image/image_5ve_tqZpXW.png"></p><p>知道特解的形式后，可以用待定系数法，将特解回代到原方程中，得到未知的系数；</p><p>还有一种情况要注意：特解与齐次解的某一项线性相关（必与齐次解线性相关），那么给特解乘个x</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zeinsshiri.github.io/2024/02/07/%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Hello World!!!!!</title>
+      <link>https://zeinsshiri.github.io/2024/02/06/hello-world/</link>
+      <guid>https://zeinsshiri.github.io/2024/02/06/hello-world/</guid>
+      <pubDate>Mon, 05 Feb 2024 23:51:09 GMT</pubDate>
+      
+        
+        
+      <description>&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zeinsshiri.github.io/2024/02/06/hello-world/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>
