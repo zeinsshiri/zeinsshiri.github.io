@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zeinsshiri.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+
+    <meta name="description" content="C&#x2F;C++等项目中，make工具可进行自动化构建（依据makefile脚本定义的编译规则和依赖关系） 编译规则command执行的规则：1）依赖文件晚于目标文件（依赖更新）2）目标文件不存在3）依赖树自底向上执行 12345678910生成目标:依赖（生成目标所需文件）（tab）依赖文件生成目标的命令target ... : prerequisites ...    command">
+<meta property="og:type" content="article">
+<meta property="og:title" content="makefile">
+<meta property="og:url" content="https://zeinsshiri.github.io/2024/02/08/%E8%BD%AF%E4%BB%B6/makefile/makefile/">
+<meta property="og:site_name" content="Zeins&#39;s Blog">
+<meta property="og:description" content="C&#x2F;C++等项目中，make工具可进行自动化构建（依据makefile脚本定义的编译规则和依赖关系） 编译规则command执行的规则：1）依赖文件晚于目标文件（依赖更新）2）目标文件不存在3）依赖树自底向上执行 12345678910生成目标:依赖（生成目标所需文件）（tab）依赖文件生成目标的命令target ... : prerequisites ...    command">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-08T08:00:06.000Z">
+<meta property="article:modified_time" content="2024-02-08T08:16:12.865Z">
+<meta property="article:author" content="Zeins_XvJin_Shiri">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zeinsshiri.github.io/2024/02/08/%E8%BD%AF%E4%BB%B6/makefile/makefile/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zeinsshiri.github.io/2024/02/08/%E8%BD%AF%E4%BB%B6/makefile/makefile/","path":"2024/02/08/软件/makefile/makefile/","title":"makefile"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>makefile | Zeins's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/rss2.xml" title="Zeins's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Zeins's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">笔记直接导入的，排版稍差，得有时间再处理</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E8%A7%84%E5%88%99"><span class="nav-text">编译规则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#make-cmd"><span class="nav-text">make_cmd</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89make-cmd"><span class="nav-text">自定义make_cmd</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#makefile%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95"><span class="nav-text">makefile文件语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Operator"><span class="nav-text">Operator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0-fun-arg-%E2%80%A6"><span class="nav-text">函数$(fun arg,…)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E4%BE%9D%E8%B5%96"><span class="nav-text">自动生成依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#makefile%E6%A8%A1%E6%9D%BF%EF%BC%9F%E5%A4%A9%E4%B9%A6"><span class="nav-text">makefile模板？天书</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zeins_XvJin_Shiri"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zeins_XvJin_Shiri</p>
+  <div class="site-description" itemprop="description">在何处付出，便在何处收获</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zeinsshiri/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zeinsshiri&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Rennai10000@outlook.com" title="E-Mail → mailto:Rennai10000@outlook.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Zeins_x_Shiri" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Zeins_x_Shiri" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zeinsshiri.github.io/2024/02/08/%E8%BD%AF%E4%BB%B6/makefile/makefile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zeins_XvJin_Shiri">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeins's Blog">
+      <meta itemprop="description" content="在何处付出，便在何处收获">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="makefile | Zeins's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          makefile
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-08 16:00:06 / 修改时间：16:16:12" itemprop="dateCreated datePublished" datetime="2024-02-08T16:00:06+08:00">2024-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">软件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>C&#x2F;C++等项目中，make工具可进行自动化构建（依据makefile脚本定义的编译规则和依赖关系）</p>
+<h1 id="编译规则"><a href="#编译规则" class="headerlink" title="编译规则"></a>编译规则</h1><p>command执行的规则：<br>1）依赖文件晚于目标文件（依赖更新）<br>2）目标文件不存在<br>3）依赖树自底向上执行</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">生成目标:依赖（生成目标所需文件）</span></span><br><span class="line">（tab）依赖文件生成目标的命令</span><br><span class="line"></span><br><span class="line">target ... : prerequisites ...</span><br><span class="line">    command</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment">#prerequisites中如果有一个以上的文件比target文件要新的话，command所定义的命令就会被执行。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="make-cmd"><a href="#make-cmd" class="headerlink" title="make_cmd"></a>make_cmd</h1><p>执行 make 时，查找“Makefile”，并根据它的指示执行操作，生成第一个目标。<br>“-f”选项指定文件，不再使用名为“Makefile”的文件；<br>“-C”选项指定目录，切换到其他目录里去;<br>可指定目标，不再默认生成第一个目标：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">make -f Makefile.build </span><br><span class="line"></span><br><span class="line">make -C a/ -f Makefile.build </span><br><span class="line"></span><br><span class="line">make -C a/ -f Makefile.build other_target</span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义make-cmd"><a href="#自定义make-cmd" class="headerlink" title="自定义make_cmd"></a>自定义make_cmd</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#自定义make_cmd</span></span><br><span class="line">伪目标：</span><br><span class="line">  shell_cmd</span><br><span class="line">  </span><br><span class="line"><span class="comment"># 伪目标 和 Makefile 同级目录下 文件/文件夹 重名时make_cmd不会执行；故要用.PHONY显式表示伪目标，定义的是make_cmd而非编译规则</span></span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>:clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">  -rm -f hello</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="makefile文件语法"><a href="#makefile文件语法" class="headerlink" title="makefile文件语法"></a>makefile文件语法</h1><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>可理解为变量是字符串流的宏定义</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#常见变量</span></span><br><span class="line">BUILD_DIR = build                                          <span class="comment"># 目标文件夹</span></span><br><span class="line">SRC_DIRS = <span class="variable">$(<span class="built_in">shell</span> pwd)</span>/src                                <span class="comment"># 源文件夹</span></span><br><span class="line">INCLUDE := <span class="variable">$(<span class="built_in">shell</span> pwd)</span>/inc                                <span class="comment"># 头文件夹</span></span><br><span class="line"></span><br><span class="line">CROSS_COMPILE =                                            <span class="comment"># 交叉编译工具头,如：arm-linux-gnueabihf-</span></span><br><span class="line">CC = gcc                                                   <span class="comment"># 编译器设置</span></span><br><span class="line">CFLAGS = -lmath -L ./lib -I <span class="variable">$(INCLUDE)</span> -g -Wall -Wextra -O0     <span class="comment">#-Wextra更多警告</span></span><br><span class="line">SRCS = <span class="variable">$(<span class="built_in">shell</span> find <span class="variable">$(SRC_DIRS)</span> -name &#x27;*.c&#x27;)</span>               <span class="comment"># 根据源文件夹查找所有源文件</span></span><br><span class="line">OBJS = <span class="variable">$(<span class="built_in">patsubst</span> %.c, <span class="variable">$(BUILD_DIR)</span>/%.o, <span class="variable">$(SRCS)</span>)</span></span><br><span class="line">TARGET = myprogram                                         <span class="comment"># 目标文件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#预设变量（用于cmd）</span></span><br><span class="line"><span class="variable">$@</span>                               <span class="comment">#生成目标(target)</span></span><br><span class="line"><span class="variable">$&lt;</span>                               <span class="comment">#第一个依赖文件（prerequisties）</span></span><br><span class="line"><span class="variable">$^</span>                               <span class="comment">#所有依赖文件（依赖的字符串流），以空格分开，不包含重复的依赖文件</span></span><br><span class="line">%.o                               <span class="comment">#通配符；对上一规则依赖项的迭代器</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">hello:a.o b.o</span></span><br><span class="line">  gcc -o hello <span class="variable">$^</span></span><br><span class="line"></span><br><span class="line"><span class="section">%.o:%.c</span></span><br><span class="line">  gcc -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Operator"><a href="#Operator" class="headerlink" title="Operator"></a>Operator</h2><p>:&#x3D;              执行make规则时赋值<br>A&#x3D;$(B)               得到B的最终值<br>A?&#x3D;               若前面已经定义A,则不覆盖前面的赋值<br>+&#x3D;            附加<br>$(X):取X变量的值<br>@+shell命令：执行make时显示执行结果而不显示执行了这条命令的记录<br>all:执行make时，若没指定目标，则执行all下的默认指令或生成其右边的默认生成目标</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">all：a</span><br><span class="line"></span><br><span class="line"><span class="section">a: a.c</span></span><br><span class="line">  gcc -o a a.c</span><br><span class="line">  _______________________________________________</span><br><span class="line">A:=123</span><br><span class="line"><span class="section">all:</span></span><br><span class="line">  @echo $A</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="函数-fun-arg-…"><a href="#函数-fun-arg-…" class="headerlink" title="函数$(fun arg,…)"></a>函数$(fun arg,…)</h2><p>$(wildcard 格式)                               &#x20;</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">src = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span>                              <span class="comment">#找到当前目录下所有后缀为.c的文件,生成文件名.c流赋值给src</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>$$\text{$ (patsubst 格式1的字符,格式2的字符,字符串流 )}$$</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj = <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o, <span class="variable">$(src)</span>)</span>                                  <span class="comment">#把字符串流中的.c文件替换成.o</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>$(foreach 变量a,字符串流,对a的引用进行的运算):遍历字符串流放入变量a;并执行运算，生成运算后的字符串流</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A:= a.o b.o</span><br><span class="line">dep_files := <span class="variable">$(<span class="built_in">foreach</span> f, <span class="variable">$(A)</span>, .<span class="variable">$(f)</span>.d)</span>                          <span class="comment"># 最终 dep_files := .a.o.d .b.o.d</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+$$\begin{array}{ll}\text{\$(filter}&\text{\%/,}&\text{\$(C))}\\\text{\$(filter-out}&\text{ \%/,}&\text{\$(C))}\end{array}$$;筛出/排除C中符合%/格式的值
+
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C =a b c d/</span><br><span class="line">D=<span class="variable">$(<span class="built_in">filter</span> %/,<span class="variable">$(C)</span>)</span></span><br><span class="line">E=<span class="variable">$(<span class="built_in">filter</span>-out %/,<span class="variable">$(C)</span>)</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="自动生成依赖"><a href="#自动生成依赖" class="headerlink" title="自动生成依赖"></a>自动生成依赖</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -M c.c//打印出生成c.o的依赖</span><br><span class="line">gcc -M -MF c.d c.c//把依赖写入c.d</span><br><span class="line"></span><br><span class="line">gcc -c -o c.o c.c -MD -MF c.d//编译c.o;把依赖写入c.d</span><br></pre></td></tr></table></figure>
+
+<h1 id="makefile模板？天书"><a href="#makefile模板？天书" class="headerlink" title="makefile模板？天书"></a>makefile模板？天书</h1><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">objs := main.o sub.o</span><br><span class="line">test : <span class="variable">$(objs)</span></span><br><span class="line">  gcc -o test <span class="variable">$^</span></span><br><span class="line"></span><br><span class="line">CFLAGS = -werror -I ./inc -Lname</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成.o文件的依赖文件列表，并列出其中存在的</span></span><br><span class="line"><span class="comment"># .main.o.d .sub.o.d</span></span><br><span class="line">dep_files := <span class="variable">$(<span class="built_in">foreach</span> f, <span class="variable">$(objs)</span>, .<span class="variable">$(f)</span>.d)</span></span><br><span class="line">dep_files := <span class="variable">$(<span class="built_in">wildcard</span> <span class="variable">$(dep_files)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 已存在依赖列表不为空，包含进来</span></span><br><span class="line"><span class="keyword">ifneq</span> (<span class="variable">$(dep_files)</span>,)</span><br><span class="line">  <span class="keyword">include</span> <span class="variable">$(dep_files)</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line">%.o : %.c</span><br><span class="line">  gcc <span class="variable">$(CFLAGS)</span> -Wp,-MD,.<span class="variable">$@</span>.d -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">#删除.o,可执行</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">  rm *.o test -f</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除.o,可执行,依赖</span></span><br><span class="line"><span class="section">distclean:</span></span><br><span class="line">  rm <span class="variable">$(dep_files)</span> *.o test -f</span><br><span class="line">  </span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>:clean</span></span><br><span class="line"><span class="meta"><span class="keyword">.PHONY</span>:disclean</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>大型项目makefile:<br>参数：<br>1)支持多个目录、多层目录、多个文件；<br>2)支持给所有文件设置编译选项；<br>3)支持给目录设置编译选项；<br>4)支持给某个文件单独设置编译选项；<br>设计：<br>1)Makefile文件确定要编译的当前目录文件和子目录<br>2)Makefile.build文件包含规则<br>3)每个需要编译的子目录都放个Makefile文件，把需要编译的文件编译成<strong>built-in.o</strong><br>4)再把所有子目录的<strong>built-in.o</strong>链接到顶层的<strong>built-in.o</strong><br>5)最后把顶层<strong>built-in.o</strong>链接到<strong>APP****生成可执行文件</strong></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">CROSS_COMPILE = <span class="comment"># 交叉编译工具头,如：arm-linux-gnueabihf-</span></span><br><span class="line">AS      = <span class="variable">$(CROSS_COMPILE)</span>as <span class="comment"># 把汇编文件生成目标文件</span></span><br><span class="line">LD      = <span class="variable">$(CROSS_COMPILE)</span>ld <span class="comment"># 链接器，为前面生成的目标代码分配地址空间，将多个目标文件链接成一个库或者一个可执行文件</span></span><br><span class="line">CC      = <span class="variable">$(CROSS_COMPILE)</span>gcc <span class="comment"># 编译器，对 C 源文件进行编译处理，生成汇编文件</span></span><br><span class="line">CPP    = <span class="variable">$(CC)</span> -E</span><br><span class="line">AR      = <span class="variable">$(CROSS_COMPILE)</span>ar <span class="comment"># 打包器，用于库操作，可以通过该工具从一个库中删除或则增加目标代码模块</span></span><br><span class="line">NM     = <span class="variable">$(CROSS_COMPILE)</span>nm <span class="comment"># 查看静态库文件中的符号表</span></span><br><span class="line"></span><br><span class="line">STRIP       = <span class="variable">$(CROSS_COMPILE)</span>strip <span class="comment"># 以最终生成的可执行文件或者库文件作为输入，然后消除掉其中的源码</span></span><br><span class="line">OBJCOPY  = <span class="variable">$(CROSS_COMPILE)</span>objcopy <span class="comment"># 复制一个目标文件的内容到另一个文件中，可用于不同源文件之间的格式转换</span></span><br><span class="line">OBJDUMP = <span class="variable">$(CROSS_COMPILE)</span>objdump <span class="comment"># 查看静态库或则动态库的签名方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 共享到sub-Makefile</span></span><br><span class="line"><span class="keyword">export</span> AS LD CC CPP AR NM</span><br><span class="line"><span class="keyword">export</span> STRIP OBJCOPY OBJDUMP</span><br><span class="line"></span><br><span class="line"><span class="comment">#compile and lib parameter</span></span><br><span class="line"><span class="comment">#编译参数</span></span><br><span class="line"><span class="comment"># -Wall ： 允许发出 GCC 提供的所有有用的报警信息</span></span><br><span class="line"><span class="comment"># -O2 : “-On”优化等级</span></span><br><span class="line"><span class="comment"># -g : 在可执行程序中包含标准调试信息</span></span><br><span class="line"><span class="comment"># -I : 指定头文件路径（可多个）</span></span><br><span class="line"><span class="comment"># LDFLAGS库路径</span></span><br><span class="line"><span class="comment">#CC      := gcc</span></span><br><span class="line">LIBS    :=</span><br><span class="line">LDFLAGS := -L <span class="variable">$(<span class="built_in">shell</span> pwd)</span>/lib</span><br><span class="line">DEFINES := </span><br><span class="line">INCLUDE := -I <span class="variable">$(<span class="built_in">shell</span> pwd)</span>/<span class="keyword">include</span></span><br><span class="line">CFLAGS  := -g -Wall -O2 -g <span class="variable">$(DEFINES)</span> <span class="variable">$(INCLUDE)</span></span><br><span class="line">CXXFLAGS:= <span class="variable">$(CFLAGS)</span> -DHAVE_CONFIG_H</span><br><span class="line"></span><br><span class="line"><span class="comment"># 共享到sub-Makefile</span></span><br><span class="line"><span class="keyword">export</span> CFLAGS LDFLAGS</span><br><span class="line"></span><br><span class="line"><span class="comment"># 顶层路径</span></span><br><span class="line">TOPDIR := <span class="variable">$(<span class="built_in">shell</span> pwd)</span></span><br><span class="line"><span class="keyword">export</span> TOPDIR</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最终目标</span></span><br><span class="line">TARGET := test</span><br><span class="line"></span><br><span class="line"><span class="comment">#自动找把当前目录下所有.c和.cpp文件，并将目标定义为同名.o文件</span></span><br><span class="line">SOURCE  := <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="variable">$(<span class="built_in">wildcard</span> *.cpp)</span></span><br><span class="line">OBJS    := <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,$(<span class="built_in">patsubst</span> %.cpp,%.o,<span class="variable">$(SOURCE)</span>)</span>)</span><br><span class="line">OBJS += subdir/ <span class="comment"># 需要进入 subdir 这个子目录去寻找文件来编进程序里，具体是哪些文件，由 subdir 目录下的 Makefile 决定。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一个目标</span></span><br><span class="line">all : start_recursive_build <span class="variable">$(TARGET)</span></span><br><span class="line">    @echo <span class="variable">$(TARGET)</span> has been built !</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 处理第一个依赖，**转到 Makefile.build 执行**</span></span><br><span class="line"><span class="section">start_recursive_build:</span></span><br><span class="line">    make -C ./ -f <span class="variable">$(TOPDIR)</span>/Makefile.build</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 处理最终目标，把前期处理得出的 built-in.o 用上</span></span><br><span class="line"><span class="variable">$(TARGET)</span> : built-in.o</span><br><span class="line">    <span class="variable">$(CC)</span> -o <span class="variable">$(TARGET)</span> built-in.o <span class="variable">$(LDFLAGS)</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 清理</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f <span class="variable">$(<span class="built_in">shell</span> find -name &quot;*.o&quot;)</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 彻底清理</span></span><br><span class="line"><span class="section">distclean:</span></span><br><span class="line">    rm -f <span class="variable">$(<span class="built_in">shell</span> find -name &quot;*.o&quot;)</span></span><br><span class="line">    rm -f <span class="variable">$(<span class="built_in">shell</span> find -name &quot;*.d&quot;)</span></span><br><span class="line">    rm -f <span class="variable">$(TARGET)</span></span><br></pre></td></tr></table></figure>
+
+<p>makefile.build:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 伪目标</span></span><br><span class="line">PHONY := __build</span><br><span class="line"><span class="section">__build:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 清空需要的变量</span></span><br><span class="line">OBJS :=</span><br><span class="line">subdir-y :=</span><br><span class="line">EXTRA_CFLAGS :=</span><br><span class="line"></span><br><span class="line"><span class="comment"># 包含同级目录Makefile</span></span><br><span class="line"><span class="comment"># 这里要注意，相对路径为 执行本 Makefile.build 的路径</span></span><br><span class="line"><span class="keyword">include</span> Makefile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取当前 Makefile 需要编译的子目录的目录名</span></span><br><span class="line"><span class="comment"># obj-y := a.o b.o c/ d/</span></span><br><span class="line"><span class="comment"># $(filter %/, $(obj-y))   : c/ d/</span></span><br><span class="line"><span class="comment"># __subdir-y  : c/ d/</span></span><br><span class="line"><span class="comment"># subdir-y    : c d</span></span><br><span class="line">__subdir-y  := <span class="variable">$(<span class="built_in">patsubst</span> %/,%,$(<span class="built_in">filter</span> %/, <span class="variable">$(OBJS)</span>)</span>)</span><br><span class="line">subdir-y  += $(__subdir-y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把子目录的目标定为以下注释</span></span><br><span class="line"><span class="comment"># built-in.o d/built-in.o</span></span><br><span class="line">subdir_objs := <span class="variable">$(<span class="built_in">foreach</span> f,$(subdir-y)</span>,<span class="variable">$(f)</span>/built-in.o)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取当前目录需要编进程序的文件名作为，并写为目标</span></span><br><span class="line"><span class="comment"># a.o b.o</span></span><br><span class="line">cur_objs := <span class="variable">$(<span class="built_in">filter</span>-out %/, <span class="variable">$(OBJS)</span>)</span></span><br><span class="line"><span class="comment"># 使修改头文件 .h 后，重新make后可以重新编译（重要）</span></span><br><span class="line">dep_files := <span class="variable">$(<span class="built_in">foreach</span> f,<span class="variable">$(cur_objs)</span>,.<span class="variable">$(f)</span>.d)</span></span><br><span class="line"><span class="comment"># 列出存在的文件</span></span><br><span class="line">dep_files := <span class="variable">$(<span class="built_in">wildcard</span> <span class="variable">$(dep_files)</span>)</span></span><br><span class="line"><span class="comment">#不为空则把存在的依赖文件包含进来（依赖文件内容是是源文件-&gt;.o文件的依赖关系）</span></span><br><span class="line"><span class="keyword">ifneq</span> (<span class="variable">$(dep_files)</span>,)</span><br><span class="line">  <span class="keyword">include</span> <span class="variable">$(dep_files)</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">PHONY += $(subdir-y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一个目标；依赖是子目录和built-in.o</span></span><br><span class="line">__build : $(subdir-y) built-in.o</span><br><span class="line"></span><br><span class="line"><span class="comment"># 优先编译 子目录的内容</span></span><br><span class="line"><span class="section">$(subdir-y):</span></span><br><span class="line">  make -C <span class="variable">$@</span> -f <span class="variable">$(TOPDIR)</span>/Makefile.build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 链接成 目标</span></span><br><span class="line">built-in.o : <span class="variable">$(cur_objs)</span> <span class="variable">$(subdir_objs)</span></span><br><span class="line">  <span class="variable">$(LD)</span> -r -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line"></span><br><span class="line">dep_file = .<span class="variable">$@</span>.d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 cur_objs 目标</span></span><br><span class="line">%.o : %.c</span><br><span class="line">  <span class="variable">$(CC)</span> <span class="variable">$(CFLAGS)</span> <span class="variable">$(EXTRA_CFLAGS)</span> $(CFLAGS_<span class="variable">$@</span>) -Wp,-MD,<span class="variable">$(dep_file)</span> -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span></span><br><span class="line">  </span><br><span class="line">.PHONY : <span class="variable">$(PHONY)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>生成静态链接库</strong></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######################################</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">######################################</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">#target you can change test to what you want</span></span><br><span class="line"><span class="comment">#共享库文件名，lib*.a</span></span><br><span class="line">TARGET  := libtest.a</span><br><span class="line">  </span><br><span class="line"><span class="comment">#compile and lib parameter</span></span><br><span class="line"><span class="comment">#编译参数</span></span><br><span class="line">CC      := gcc</span><br><span class="line">AR      = ar</span><br><span class="line">RANLIB  = ranlib</span><br><span class="line">LIBS    :=</span><br><span class="line">LDFLAGS :=</span><br><span class="line">DEFINES :=</span><br><span class="line">INCLUDE := -I.</span><br><span class="line">CFLAGS  := -g -Wall -O3 <span class="variable">$(DEFINES)</span> <span class="variable">$(INCLUDE)</span></span><br><span class="line">CXXFLAGS:= <span class="variable">$(CFLAGS)</span> -DHAVE_CONFIG_H</span><br><span class="line">  </span><br><span class="line"><span class="comment">#i think you should do anything here</span></span><br><span class="line"><span class="comment">#下面的基本上不需要做任何改动了</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">#source file</span></span><br><span class="line"><span class="comment">#源文件，自动找所有.c和.cpp文件，并将目标定义为同名.o文件</span></span><br><span class="line">SOURCE  := <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="variable">$(<span class="built_in">wildcard</span> *.cpp)</span></span><br><span class="line">OBJS    := <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,$(<span class="built_in">patsubst</span> %.cpp,%.o,<span class="variable">$(SOURCE)</span>)</span>)</span><br><span class="line">  </span><br><span class="line">.PHONY : everything objs clean veryclean rebuild</span><br><span class="line">  </span><br><span class="line">everything : <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line">all : <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line">objs : <span class="variable">$(OBJS)</span></span><br><span class="line">  </span><br><span class="line"><span class="section">rebuild: veryclean everything</span></span><br><span class="line">                </span><br><span class="line">clean :</span><br><span class="line">    rm -fr *.o</span><br><span class="line">    </span><br><span class="line">veryclean : clean</span><br><span class="line">    rm -fr <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJS)</span></span><br><span class="line">    <span class="variable">$(AR)</span> cru <span class="variable">$(TARGET)</span> <span class="variable">$(OBJS)</span></span><br><span class="line">    <span class="variable">$(RANLIB)</span> <span class="variable">$(TARGET)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>生成动态链接库</strong></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######################################</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">######################################</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">#target you can change test to what you want</span></span><br><span class="line"><span class="comment">#共享库文件名，lib*.so</span></span><br><span class="line">TARGET  := libtest.so</span><br><span class="line">  </span><br><span class="line"><span class="comment">#compile and lib parameter</span></span><br><span class="line"><span class="comment">#编译参数</span></span><br><span class="line">CC      := gcc</span><br><span class="line">LIBS    :=</span><br><span class="line">LDFLAGS :=</span><br><span class="line">DEFINES :=</span><br><span class="line">INCLUDE := -I.</span><br><span class="line">CFLAGS  := -g -Wall -O3 <span class="variable">$(DEFINES)</span> <span class="variable">$(INCLUDE)</span></span><br><span class="line">CXXFLAGS:= <span class="variable">$(CFLAGS)</span> -DHAVE_CONFIG_H</span><br><span class="line">SHARE   := -fPIC -shared -o</span><br><span class="line">  </span><br><span class="line"><span class="comment">#i think you should do anything here</span></span><br><span class="line"><span class="comment">#下面的基本上不需要做任何改动了</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">#source file</span></span><br><span class="line"><span class="comment">#源文件，自动找所有.c和.cpp文件，并将目标定义为同名.o文件</span></span><br><span class="line">SOURCE  := <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span> <span class="variable">$(<span class="built_in">wildcard</span> *.cpp)</span></span><br><span class="line">OBJS    := <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,$(<span class="built_in">patsubst</span> %.cpp,%.o,<span class="variable">$(SOURCE)</span>)</span>)</span><br><span class="line">  </span><br><span class="line">.PHONY : everything objs clean veryclean rebuild</span><br><span class="line">  </span><br><span class="line">everything : <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line">all : <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line">objs : <span class="variable">$(OBJS)</span></span><br><span class="line">  </span><br><span class="line"><span class="section">rebuild: veryclean everything</span></span><br><span class="line">                </span><br><span class="line">clean :</span><br><span class="line">    rm -fr *.o</span><br><span class="line">    </span><br><span class="line">veryclean : clean</span><br><span class="line">    rm -fr <span class="variable">$(TARGET)</span></span><br><span class="line">  </span><br><span class="line"><span class="variable">$(TARGET)</span> : <span class="variable">$(OBJS)</span></span><br><span class="line">    <span class="variable">$(CC)</span> <span class="variable">$(CXXFLAGS)</span> <span class="variable">$(SHARE)</span> <span class="variable">$@</span> <span class="variable">$(OBJS)</span> <span class="variable">$(LDFLAGS)</span> <span class="variable">$(LIBS)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">src = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span>          <span class="comment">#生成.c依赖文件字符串流；找到当前目录下所有.c文件生成字符串流</span></span><br><span class="line"></span><br><span class="line">obj = <span class="variable">$(<span class="built_in">patsubst</span> %.c, %.o, <span class="variable">$(src)</span>)</span>                                  <span class="comment">#把.c字符串流变成.o字符串流</span></span><br><span class="line"></span><br><span class="line"><span class="section">ALL:math.out                                                        #指定构建树最终结果</span></span><br><span class="line"></span><br><span class="line">a.</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+    
+    
+      <div>
+        
+    <div style="text-align:center;color: #ccc;font-size:14px;">
+    ------ The Happy Ending ------</div>
+
+      </div>
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Zeins_XvJin_Shiri 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Zeins_XvJin_Shiri 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Zeins_XvJin_Shiri
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://zeinsshiri.github.io/2024/02/08/%E8%BD%AF%E4%BB%B6/makefile/makefile/" title="makefile">https://zeinsshiri.github.io/2024/02/08/软件/makefile/makefile/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 软件</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/08/%E8%BD%AF%E4%BB%B6/vi/vi/" rel="prev" title="vi">
+                  <i class="fa fa-angle-left"></i> vi
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/08/%E8%BD%AF%E4%BB%B6/GNU%20binutils/GNU%20binutils/" rel="next" title="GNU binutils">
+                  GNU binutils <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81OTQ5OS8zNTk2MQ=="></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024-02 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zeins_XvJin_Shiri</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">330k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:01</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动 -->
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zeinsshiri/" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"mhchem":false,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+  
+  
+<style>
+#selectionCopyright {
+    position: absolute;
+    display: none;
+    background: rgba(244,67,54,.7);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: none;
+    border: none;
+    font-size: 14px;
+}
+#selectionCopyright a{
+    color:#fff;
+    border-color: #fff;
+}
+#selectionCopyright::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent rgba(244,67,54,.7) transparent transparent;
+    position: absolute;
+    left: -8px;
+    top:50%;
+    transform:translateY(-50%);
+}
+</style>
+
+<button id="selectionCopyright" disabled="disabled">本文由Zeins原创并遵循CC4.0，转载请注明出处并链接回原文地址哟</button>
+
+<script>
+window.onload = function() {
+    function selectText() {
+        if (document.selection) { //IE浏览器下
+            return document.selection.createRange().text; //返回选中的文字
+        } else { //非IE浏览器下
+            return window.getSelection().toString(); //返回选中的文字
+        }
+    }
+    var content = document.getElementsByTagName("body")[0];
+    var scTip = document.getElementById('selectionCopyright');
+
+    content.onmouseup = function(ev) { //设定一个onmouseup事件
+        var ev = ev || window.event;
+        var left = ev.clientX;//获取鼠标相对浏览器可视区域左上角水平距离距离
+        var top = ev.clientY;//获取鼠标相对浏览器可视区域左上角垂直距离距离
+        var xScroll = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);//获取文档水平滚动距离
+        var yScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);//获取文档垂直滚动距离
+        if (selectText().length > 0) {
+            setTimeout(function() { //设定一个定时器
+                scTip.style.display = 'inline-block';
+                scTip.style.left = left + xScroll + 15 + 'px';//鼠标当前x值
+                scTip.style.top = top + yScroll - 15 + 'px';//鼠标当前y值
+            }, 100);
+        } else {
+            scTip.style.display = 'none';
+        }
+    };
+
+    content.onclick = function(ev) {
+        var ev = ev || window.event;
+        ev.cancelBubble = true;
+    };
+    document.onclick = function() {
+        scTip.style.display = 'none';
+    };
+};
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":290},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false,"tagMode":false});</script></body>
+</html>
+
+

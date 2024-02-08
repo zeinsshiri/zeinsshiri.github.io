@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zeinsshiri.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+
+    <meta name="description" content="输入可表示为各点值（或微元）与单位冲激的线性组合（卷积） 离散线性时不变系统求和：卷积和单个离散信号可由单位冲激序列表示：$ x[k]&#x3D; x[k]\cdot\delta[n-k]  $离散输入序列可用卷积和表示$x[n]&#x3D;\sum_{k&#x3D;-\infty}^{+\infty}x[k]\delta[n-k]$;由于线性时不变离散输出序列的卷积和：$y[n]&#x3D;\s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性时不变系统">
+<meta property="og:url" content="https://zeinsshiri.github.io/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/">
+<meta property="og:site_name" content="Zeins&#39;s Blog">
+<meta property="og:description" content="输入可表示为各点值（或微元）与单位冲激的线性组合（卷积） 离散线性时不变系统求和：卷积和单个离散信号可由单位冲激序列表示：$ x[k]&#x3D; x[k]\cdot\delta[n-k]  $离散输入序列可用卷积和表示$x[n]&#x3D;\sum_{k&#x3D;-\infty}^{+\infty}x[k]\delta[n-k]$;由于线性时不变离散输出序列的卷积和：$y[n]&#x3D;\s">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_PZ8oksCIM1.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_J0YGlps6Di.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_fOTL8cecI-.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_cigZueb9lm.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_qTgkxG-h-C.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_OzhkXZcURU.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_2WsphA4Yx7.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_ZMpADX_nby.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_M_LBk-ZuMZ.png">
+<meta property="article:published_time" content="2024-02-08T08:00:06.000Z">
+<meta property="article:modified_time" content="2024-02-08T08:13:17.839Z">
+<meta property="article:author" content="Zeins_XvJin_Shiri">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zeinsshiri.github.io/image/image_PZ8oksCIM1.png">
+
+
+<link rel="canonical" href="https://zeinsshiri.github.io/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zeinsshiri.github.io/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/","path":"2024/02/08/数学/线性系统分析（信号与系统）/线性时不变系统/线性时不变系统/","title":"线性时不变系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>线性时不变系统 | Zeins's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/rss2.xml" title="Zeins's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Zeins's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">笔记直接导入的，排版稍差，得有时间再处理</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F%E6%B1%82%E5%92%8C%EF%BC%9A%E5%8D%B7%E7%A7%AF%E5%92%8C"><span class="nav-text">离散线性时不变系统求和：卷积和</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F%E7%A7%AF%E5%88%86%EF%BC%9A%E5%8D%B7%E7%A7%AF%E7%A7%AF%E5%88%86"><span class="nav-text">连续线性时不变系统积分：卷积积分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-text">性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%A0%E6%9E%9C%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F%E6%95%B0%E5%AD%A6%E8%A1%A8%E7%A4%BA"><span class="nav-text">因果性时不变系统数学表示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0%E8%BE%93%E5%85%A5LTI%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-text">周期函数输入LTI系统的响应</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zeins_XvJin_Shiri"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zeins_XvJin_Shiri</p>
+  <div class="site-description" itemprop="description">在何处付出，便在何处收获</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zeinsshiri/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zeinsshiri&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Rennai10000@outlook.com" title="E-Mail → mailto:Rennai10000@outlook.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Zeins_x_Shiri" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Zeins_x_Shiri" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zeinsshiri.github.io/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zeins_XvJin_Shiri">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeins's Blog">
+      <meta itemprop="description" content="在何处付出，便在何处收获">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="线性时不变系统 | Zeins's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          线性时不变系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-08 16:00:06 / 修改时间：16:13:17" itemprop="dateCreated datePublished" datetime="2024-02-08T16:00:06+08:00">2024-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/math/" itemprop="url" rel="index"><span itemprop="name">math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>输入可表示为<strong>各点值（或微元）与单位冲激的线性组合</strong>（卷积）</p>
+<h1 id="离散线性时不变系统求和：卷积和"><a href="#离散线性时不变系统求和：卷积和" class="headerlink" title="离散线性时不变系统求和：卷积和"></a>离散线性时不变系统求和：卷积和</h1><p>单个离散信号可由单位冲激序列表示：$ x[k]&#x3D; x[k]\cdot\delta[n-k]  $<br>离散输入序列可用卷积和表示$x[n]&#x3D;\sum_{k&#x3D;-\infty}^{+\infty}x[k]\delta[n-k]$;由于线性时不变<br>离散输出序列的卷积和：$y[n]&#x3D;\sum_{k&#x3D;-\infty}^{+\infty}x[k]h[n-k]:&#x3D;x[n]*h[n]$;输入与单位冲激响应的卷积</p>
+<h1 id="连续线性时不变系统积分：卷积积分"><a href="#连续线性时不变系统积分：卷积积分" class="headerlink" title="连续线性时不变系统积分：卷积积分"></a>连续线性时不变系统积分：卷积积分</h1><p>对连续函数无穷个点求和必引发悖论；尝试对脉冲微元求和取极限表示这个信号函数：$\delta_\Delta(t-k\Delta)$筛出微元$\delta_k$范围内的高</p>
+<p><img src="/image/image_PZ8oksCIM1.png"></p>
+<p>$ x(t)&#x3D;\lim_{ \bigtriangleup  \to 0} \sum_{k&#x3D;-\infty}^{+\infty} x(k\Delta)\Delta \cdot\delta_\Delta(t-k\Delta)&#x3D;\int\limits_{-\infty}^{+\infty} x(\tau)\delta(t-\tau)d\tau  $$y(t)&#x3D;\lim_{ \bigtriangleup  \to 0} \sum_{k&#x3D;-\infty}^{+\infty} x(k\Delta)\Delta \cdot h (t-k\Delta)&#x3D;\int\limits_{-\infty}^{+\infty} x(\tau)h(t-\tau)d\tau:&#x3D;x(t)* h(t)$</p>
+<h1 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h1><p>1）卷积交换律</p>
+<p><img src="/image/image_J0YGlps6Di.png"></p>
+<p><img src="/image/image_fOTL8cecI-.png"></p>
+<p>2）卷积结合律：反映了并联系统转换</p>
+<p><img src="/image/image_cigZueb9lm.png"></p>
+<p><img src="/image/image_qTgkxG-h-C.png"></p>
+<p>3）卷积分配律：反应串联转换<br>因果性：</p>
+<p><img src="/image/image_OzhkXZcURU.png"></p>
+<p><img src="/image/image_2WsphA4Yx7.png"></p>
+<p><img src="/image/image_ZMpADX_nby.png"></p>
+<p>4）无记忆性：系统任意时刻输出只取决于当前时刻输入；<br>离散时间线性时不变系统$y[n]&#x3D;\sum_{k&#x3D;-\infty}^{+\infty}x[k]h[n-k]:&#x3D;x[n]*h[n]$,能使其满足无记忆的只有：$筛出x[n]项$；<br>$即k≠n时；h[n-k]≠h[0]时：h[n-k]&#x3D;f(\delta (n-k))&#x3D;0;$$k&#x3D;n时；h[0]&#x3D;f(\delta (0))&#x3D;K\delta(0)$$把x[n]项筛出$;<br>综上：$h(n)&#x3D;K\delta (n)$时；当n不为0，响应为0；当n&#x3D;0,把系数筛出<br>5)可逆性：$x(t)*h(t)*h^{-1}(t)&#x3D;x(t)⇒h(t)*h^{-1}(t)&#x3D;\delta (t)$;筛出每一点再求和还是原来的函数<br>6)因果（不可预测）系统：系统任意时刻输出y(t)取决于现在或以往时刻的输入；对于线性时不变系统；只要将卷积式$x(k≤t)$的项筛出；即当$k&gt;t:h[n-k]&#x3D;0⇒h[n-k]&#x3D;Ku[-(n-t)]$<br>7）稳定性：当$x(t)≤A$;$y(t)&#x3D;x(t)*h(t)也要有界$：则必须满足：<br>$\begin{aligned}|y(t)|&amp;&#x3D;\left|\int_{-\infty}^{+\infty}x(\tau)h(t-\tau)\mathrm{d}\tau\right|\\&amp;\leqslant\int_{-\infty}^{+\infty}|x(\tau)||h(t-\tau)|\mathrm{d}\tau\\&amp;\leqslant B\int_{-\infty}^{+\infty}|h(t-\tau)|\mathrm{d}\tau&lt;\infty \end{aligned}$</p>
+<h1 id="因果性时不变系统数学表示"><a href="#因果性时不变系统数学表示" class="headerlink" title="因果性时不变系统数学表示"></a>因果性时不变系统数学表示</h1><p>连续系统约束形式通常为 N 阶线性常系数微分方程： $\sum_{k&#x3D;0}^Na_k\frac{\mathrm{d}^ky(t)}{\mathrm{d}t^k}&#x3D;\sum_{k&#x3D;0}^Mb_k\frac{\mathrm{d}^kx(t)}{\mathrm{d}t^k}$; 左边是 y 对 t 的微分式，左边是 $f(t)$, 故可应用<a target="_blank" rel="noopener" href="https://www.wolai.com/obTkJRP6HRtsCTYZXeWbdf" title="微分方程">微分方程</a> 的结论；<br>为何一定是常系数：设$x(t)$的响应是$y(t),a_k(t)$ 为常系数时上述等号才成立；<br>为何是时不变： 其解的构造比如说为 $y&#x3D;Ae^{\alpha t}+Be^{\beta t}+Cf(t)$ ;<br>1)当$t&lt;0^+$时0输入：$\left{\begin{array}{ll}&amp;y(0^+)&#x3D;A+B\&amp;y(+\infty)&#x3D;Cf(+\infty)\end{array}\right. .&#x3D;&gt;y&#x3D;e^t(Ae^{\alpha}+$$Be^\beta)+\frac{y(+\infty)}{f(+\infty)}f(t)$<br>2)当$t&lt;0^+$时0状态：$\left{\begin{array}{ll}y(0^+)&#x3D;0&#x3D;A+B+Cf(0^+)\y(+\infty)&#x3D;Cf(+\infty)\end{array}\right .&#x3D;&gt;y&#x3D;$$e^t(Ae^\alpha+Be^\beta)+\frac{y(+\infty)}{f(+\infty)}f(t)$ ;<br>初始松弛状态下： $y(t)&#x3D;A(e^\alpha-e^\beta)e^t+$$\frac{y(+\infty)}{f(+\infty)}f(t)$ ;又因为 $x(t)&#x3D;\int_{-\infty}^{+\infty}x(\tau)\delta(t-\tau)d\tau$ ; 以M&#x3D;1为例⇒$f(t)&#x3D;x(\tau)\delta(t-\tau)d\tau$:<br>$y(\tau)&#x3D;C_1e^{\tau}+C_2 x(\tau)$$y(\tau ≠t)&#x3D;C_1e^{t}$<br>显然是个时不变系统</p>
+<p><img src="/image/image_M_LBk-ZuMZ.png"></p>
+<p>离散系统约束形式为N阶线性常系数差分方程：$\sum_{k&#x3D;0}^Na_ky[n-k]&#x3D;\sum_{k&#x3D;0}^Mb_kx[n-k]$<a target="_blank" rel="noopener" href="https://www.wolai.com/3x3TtF7yvPKh4UQGKBmTC8" title="差分方程">差分方程</a><br>通过观察，这个差分方程可以写成这样：$y[n]&#x3D;\frac{1}{a_{0}}\left (\sum_{k&#x3D;0}^{M}b_{k}x[n-k]-\sum_{k&#x3D;1}^{N}a_{k}y[n-k]\right)$;很显然这是一个因果系统；其当前输出取决于当前和以往输入和以往输出，形成一种递归树的结构（因此是递归方程）；<br>卷积和且松弛条件下：$y[n]&#x3D;\frac{1}{a_{0}}\left (\sum_{k&#x3D;0}^{M}b_{k}\delta[n-k]-\sum_{k&#x3D;1}^{N}a_{k}h[n-k]\right)$:<br>$y[0]&#x3D;\frac{b_0}{a_0}$$y[1]&#x3D;\frac{b_1-b_0}{a_0}$$y[n]&#x3D;\frac{1}{a_0}(b_n\delta[n-k]-\sum_{k&#x3D;1}^{n-1} a_kh[n-k])$&#x3D;$\frac{1}{a_0}(x[n]-\sum_{i&#x3D;0}^{n-1} y[i] )$<br>显然在松弛条件下是因果时不变的</p>
+<h1 id="周期函数输入LTI系统的响应"><a href="#周期函数输入LTI系统的响应" class="headerlink" title="周期函数输入LTI系统的响应"></a>周期函数输入LTI系统的响应</h1><p><a target="_blank" rel="noopener" href="https://www.wolai.com/kmtG2gVsCfVfhfBbhDMXF9" title="傅里叶分析">傅里叶分析</a>周期为T的函数x(t)&#x3D;$\frac{a’<em>{0}}{2}+\sum</em>{n&#x3D;1}^{+\infty}(a_{n}\cos n\frac{2\pi}{T}t+b_{n}\sin n\frac{2\pi}{T}t)$&#x3D;$\sum_{n&#x3D;-\infty}^{+\infty}C_ne^{jn\frac{2\pi}{T}t}$<br>频谱系数：{$C_k$}:<br>1)$a’<em>0&#x2F;2$&#x3D;$ \frac{1}{2T}\int</em>{0}^{T} x(t)dt  $<br>2)$a_n&#x3D;\frac{1}{T}\int_{0}^{T} x(t)cosn\frac{2\pi}{T}tdt$<br>3)$b_n&#x3D;\frac{1}{T}\int_{0}^{T} x(t)sinn\frac{2\pi}{T}tdt$<br>4)$C_n&#x3D;\frac{1}{T}\int_{0}^{T} x(t)e^{-jn\frac{2\pi}{T}t}dt$<br>可见周期函数可表示为 无穷个 整数倍谐波频率$n\omega$ 指数函数的线性组合；&#x20;<br>又LTI系统中：输出函数是输入函数与单位冲激响应的卷积：<br>y(t)&#x3D;$x(t)*h(t)$&#x3D;$\int_{-\infty}^{+\infty } h(\tau)x(t-\tau)d\tau$$&#x3D;\int_{-\infty}^{+\infty }h(\tau)\sum_{n&#x3D;-\infty}^{+\infty}C_ne^{jn\frac{2\pi}{T}(t-\tau)}d\tau<br>&#x3D;\sum_{n&#x3D;-\infty}^{+\infty}C_ne^{jn\frac{2\pi}{T} t}\int_{-\infty}^{+\infty }h(\tau)e^{-jn\frac{2\pi}{T}\tau}d\tau&#x3D;\sum_{n&#x3D;-\infty}^{+\infty}C_ne^{jn\frac{2\pi}{T} t}H(s)$<br>满足线性时不变性；<br>其中H(s)是单位冲激响应的拉氏变换；$e^{jn\frac{2\pi}{T} t}H(s)$是是指数信号$e^{jn\frac{2\pi}{T} t}$的响应</p>
+
+    </div>
+
+    
+    
+    
+    
+    
+      <div>
+        
+    <div style="text-align:center;color: #ccc;font-size:14px;">
+    ------ The Happy Ending ------</div>
+
+      </div>
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Zeins_XvJin_Shiri 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Zeins_XvJin_Shiri 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Zeins_XvJin_Shiri
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://zeinsshiri.github.io/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F/" title="线性时不变系统">https://zeinsshiri.github.io/2024/02/08/数学/线性系统分析（信号与系统）/线性时不变系统/线性时不变系统/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"><i class="fa fa-tag"></i> math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/08/%E6%95%B0%E5%AD%A6/%E6%A6%82%E7%8E%87/%E5%B8%B8%E8%A7%81%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83/%E5%B8%B8%E8%A7%81%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83/" rel="prev" title="常见概率分布">
+                  <i class="fa fa-angle-left"></i> 常见概率分布
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/08/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%EF%BC%88%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F%EF%BC%89/%E7%B3%BB%E7%BB%9F%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7/%E7%B3%BB%E7%BB%9F%E8%BE%93%E5%85%A5%E4%BF%A1%E5%8F%B7/" rel="next" title="系统输入信号">
+                  系统输入信号 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81OTQ5OS8zNTk2MQ=="></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024-02 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zeins_XvJin_Shiri</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">330k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:01</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动 -->
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zeinsshiri/" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"mhchem":false,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+  
+  
+<style>
+#selectionCopyright {
+    position: absolute;
+    display: none;
+    background: rgba(244,67,54,.7);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: none;
+    border: none;
+    font-size: 14px;
+}
+#selectionCopyright a{
+    color:#fff;
+    border-color: #fff;
+}
+#selectionCopyright::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent rgba(244,67,54,.7) transparent transparent;
+    position: absolute;
+    left: -8px;
+    top:50%;
+    transform:translateY(-50%);
+}
+</style>
+
+<button id="selectionCopyright" disabled="disabled">本文由Zeins原创并遵循CC4.0，转载请注明出处并链接回原文地址哟</button>
+
+<script>
+window.onload = function() {
+    function selectText() {
+        if (document.selection) { //IE浏览器下
+            return document.selection.createRange().text; //返回选中的文字
+        } else { //非IE浏览器下
+            return window.getSelection().toString(); //返回选中的文字
+        }
+    }
+    var content = document.getElementsByTagName("body")[0];
+    var scTip = document.getElementById('selectionCopyright');
+
+    content.onmouseup = function(ev) { //设定一个onmouseup事件
+        var ev = ev || window.event;
+        var left = ev.clientX;//获取鼠标相对浏览器可视区域左上角水平距离距离
+        var top = ev.clientY;//获取鼠标相对浏览器可视区域左上角垂直距离距离
+        var xScroll = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);//获取文档水平滚动距离
+        var yScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);//获取文档垂直滚动距离
+        if (selectText().length > 0) {
+            setTimeout(function() { //设定一个定时器
+                scTip.style.display = 'inline-block';
+                scTip.style.left = left + xScroll + 15 + 'px';//鼠标当前x值
+                scTip.style.top = top + yScroll - 15 + 'px';//鼠标当前y值
+            }, 100);
+        } else {
+            scTip.style.display = 'none';
+        }
+    };
+
+    content.onclick = function(ev) {
+        var ev = ev || window.event;
+        ev.cancelBubble = true;
+    };
+    document.onclick = function() {
+        scTip.style.display = 'none';
+    };
+};
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":290},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false,"tagMode":false});</script></body>
+</html>
+
+

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zeinsshiri.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+
+    <meta name="description" content="一口气搞懂「文件系统」，就靠这 25 张图了 前言不多 BB，直接上「硬菜」。 正文文件系统的基本组成文件系统是操作系统中负责管理持久数据的子系统，说简单点，就是负责把用户的文件存到磁盘硬件中，因为即使计算机断电了，磁盘里的数据并不会丢失，所以可以… https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;183238194 文件格式：数据以比特流的形式存储，为了能够流通；需要一套编码&amp;#x2F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件系统（磁盘管理系统）">
+<meta property="og:url" content="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/">
+<meta property="og:site_name" content="Zeins&#39;s Blog">
+<meta property="og:description" content="一口气搞懂「文件系统」，就靠这 25 张图了 前言不多 BB，直接上「硬菜」。 正文文件系统的基本组成文件系统是操作系统中负责管理持久数据的子系统，说简单点，就是负责把用户的文件存到磁盘硬件中，因为即使计算机断电了，磁盘里的数据并不会丢失，所以可以… https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;183238194 文件格式：数据以比特流的形式存储，为了能够流通；需要一套编码&amp;#x2F">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_s1VyhB2QNc.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_LUCdweUOM0.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_R3rXd-Wqm-.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_y9RNrr9HSX.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_e4xoVFJsqZ.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_FyB2rpFAvp.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_U9l0DJAWpJ.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_-mG7-kZwwz.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_0taojPzF2G.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_nXnR1PIlZ8.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_GyCTpHeHBT.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-19eb0bd6897bd2eb201f1f8a8b11a5a6_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-ab4bf8b83a7cf4ec8f2f9496d24ed319_720w.webp">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_sma3mLOaUm.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_R_bVlgz6df.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_APl8uir-hH.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_SoU77l0gee.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_sgp3QStLIm.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_WG1yi2l4ZM.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_GkiPYIRBcr.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_r0gv14yvR6.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_dzTRr3bswL.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_uk0yGIxi1g.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_Nb6iICv1L1.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_HOAl9ipYMl.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_9AP0mFFLdu.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_tPEkEry1o2.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_7mIDy-q5h0.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_XIeDjlmue4.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_r1yADyjkt3.png">
+<meta property="article:published_time" content="2024-02-07T09:18:48.000Z">
+<meta property="article:modified_time" content="2024-02-08T08:31:34.022Z">
+<meta property="article:author" content="Zeins_XvJin_Shiri">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zeinsshiri.github.io/image/image_s1VyhB2QNc.png">
+
+
+<link rel="canonical" href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/","path":"2024/02/07/软件/系统编程/文件系统（磁盘管理系统）/文件系统（磁盘管理系统）/","title":"文件系统（磁盘管理系统）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>文件系统（磁盘管理系统） | Zeins's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/rss2.xml" title="Zeins's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Zeins's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">笔记直接导入的，排版稍差，得有时间再处理</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">ELF文件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B4"><span class="nav-text">文件头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E6%AE%B5%E8%A1%A8"><span class="nav-text">逻辑段表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5%EF%BC%88-text%EF%BC%89"><span class="nav-text">代码段（.text）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%AE%B5%EF%BC%88-data%EF%BC%89"><span class="nav-text">数据段（.data）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E8%AF%BB%E6%95%B0%E6%8D%AE%E6%AE%B5%EF%BC%88-rodata%EF%BC%89"><span class="nav-text">只读数据段（.rodata）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bss-%E6%AE%B5"><span class="nav-text">bss 段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A1%A8%E6%AE%B5%EF%BC%88-symtab%EF%BC%89"><span class="nav-text">符号表段（.symtab）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#comment"><span class="nav-text">.comment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A1%A8-shstrtab-%EF%BC%9ASection-String-table"><span class="nav-text">符号表(.shstrtab)：Section String table</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic"><span class="nav-text">.dynamic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E4%BD%8D%E4%BB%A3%E7%A0%81%E6%AE%B5%EF%BC%88-rel-text%EF%BC%89"><span class="nav-text">重定位代码段（.rel.text）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%AE%B5%E8%A1%A8"><span class="nav-text">自定义段表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-text">文件系统基本组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FVirtual-File-System%EF%BC%8CVFS%E6%8E%A5%E5%8F%A3"><span class="nav-text">虚拟文件系统Virtual File System，VFS接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E4%B8%8A%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-text">磁盘上文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E4%B8%8A%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84"><span class="nav-text">磁盘上的文件系统结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8"><span class="nav-text">文件存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%AD%98%E5%82%A8"><span class="nav-text">连续存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E9%93%BE%E8%A1%A8%EF%BC%88%E6%8C%87%E9%92%88%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%9D%97%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-text">隐式链表（指针存储数据块节点关系）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E5%BC%8F%E9%93%BE%E8%A1%A8%EF%BC%88%E6%96%87%E4%BB%B6%E5%88%86%E9%85%8D%E8%A1%A8%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%9D%97%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-text">显式链表（文件分配表存储数据块节点关系）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%9D%97%EF%BC%88%E7%B4%A2%E5%BC%95%E5%9D%97%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%9D%97%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%E8%A1%A8%EF%BC%89"><span class="nav-text">索引块（索引块存储数据块节点关系表）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E7%B4%A2%E5%BC%95%E5%AD%98%E5%82%A8%EF%BC%88%E9%93%BE%E5%BC%8F%E7%B4%A2%E5%BC%95%E5%9D%97%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%9D%97%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-text">链式索引存储（链式索引块存储数据块节点关系）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E7%B4%A2%E5%BC%95%E5%AD%98%E5%82%A8%EF%BC%9A%EF%BC%88%E5%A4%9A%E5%8F%89%E6%A0%91%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E5%9D%97%E8%8A%82%E7%82%B9%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-text">多级索引存储：（多叉树存储数据块节点关系）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8"><span class="nav-text">目录文件存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E9%97%B2%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-text">空闲空间管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E9%93%BE%E6%8E%A5"><span class="nav-text">软硬链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9Cposix"><span class="nav-text">文件操作posix</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#stat-access-utime"><span class="nav-text">stat&#x2F;access&#x2F;utime</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chown-chmod-utime-truncate"><span class="nav-text">chown&#x2F;chmod&#x2F;utime&#x2F;truncate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#link-symlink-unlink-readlink"><span class="nav-text">link&#x2F;symlink&#x2F;unlink&#x2F;readlink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rename"><span class="nav-text">rename</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basename-dirname"><span class="nav-text">basename&#x2F; dirname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#opendir-closedir"><span class="nav-text">opendir&#x2F;closedir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seekdir"><span class="nav-text">seekdir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readdir"><span class="nav-text">readdir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#telldir"><span class="nav-text">telldir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#getcwd"><span class="nav-text">getcwd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ex"><span class="nav-text">ex</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zeins_XvJin_Shiri"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zeins_XvJin_Shiri</p>
+  <div class="site-description" itemprop="description">在何处付出，便在何处收获</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zeinsshiri/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zeinsshiri&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Rennai10000@outlook.com" title="E-Mail → mailto:Rennai10000@outlook.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Zeins_x_Shiri" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Zeins_x_Shiri" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zeins_XvJin_Shiri">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeins's Blog">
+      <meta itemprop="description" content="在何处付出，便在何处收获">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="文件系统（磁盘管理系统） | Zeins's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          文件系统（磁盘管理系统）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-07 17:18:48" itemprop="dateCreated datePublished" datetime="2024-02-07T17:18:48+08:00">2024-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-08 16:31:34" itemprop="dateModified" datetime="2024-02-08T16:31:34+08:00">2024-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">软件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>11k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/183238194" title="一口气搞懂「文件系统」，就靠这 25 张图了 前言不多 BB，直接上「硬菜」。 正文文件系统的基本组成文件系统是操作系统中负责管理持久数据的子系统，说简单点，就是负责把用户的文件存到磁盘硬件中，因为即使计算机断电了，磁盘里的数据并不会丢失，所以可以… https://zhuanlan.zhihu.com/p/183238194">一口气搞懂「文件系统」，就靠这 25 张图了 前言不多 BB，直接上「硬菜」。 正文文件系统的基本组成文件系统是操作系统中负责管理持久数据的子系统，说简单点，就是负责把用户的文件存到磁盘硬件中，因为即使计算机断电了，磁盘里的数据并不会丢失，所以可以… https://zhuanlan.zhihu.com/p/183238194</a></p>
+<p>文件格式：数据以比特流的形式存储，为了能够流通；需要一套编码&#x2F;解码规则，即文件格式；当我们打开一个文件时，计算机会根据文件格式来解析文件的内容，并将其呈现给用户或进行相应的处理操作</p>
+<p>文件系统：1，2就是建立数据结构维护数据并设计数据操作算法<br>1）文件存储以及磁盘空间管理：负责在磁盘上分配空间存储文件并记录文件相关信息；文件删除时，文件系统回收这些空间<br>1.2）文件备份和恢复</p>
+<p>2）文件管理：实现增删改查，移动，重命名等系统功能；用户通过文件系统的接口管理文件<br>2.2）文件访问控制</p>
+<p>3）文件压缩和加密<br>4）文件共享：文件系统可以将文件共享给其他计算机或用户，使得多个用户可以同时访问和修改文件</p>
+<h1 id="ELF文件格式"><a href="#ELF文件格式" class="headerlink" title="ELF文件格式"></a>ELF文件格式</h1><table>
+<thead>
+<tr>
+<th>ELF 文件类型</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可重定位文件(Relocatable File)</td>
+<td>包含代码和数据、可被链接为可执行文件或共享目标文件，静态链接库被归为此类</td>
+<td>Linux 下的 *.o</td>
+</tr>
+<tr>
+<td>可执行文件(Executable File)</td>
+<td>此类文件包含了可以直接执行的文件</td>
+<td>&#x2F;bin&#x2F;bash</td>
+</tr>
+<tr>
+<td>共享目标文件(Share Object File)</td>
+<td>此类文件包含了可以直接执行的文件</td>
+<td>linux 的 *.so&#xA;&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc-2.23.so</td>
+</tr>
+<tr>
+<td>核心转储文件(Core Dump File)</td>
+<td>当进程意外终止，系统生成的核心转储文件</td>
+<td>Linux 下的 core dump文件</td>
+</tr>
+</tbody></table>
+<p><img src="/image/image_s1VyhB2QNc.png"></p>
+<p><img src="/image/image_LUCdweUOM0.png"></p>
+<h2 id="文件头"><a href="#文件头" class="headerlink" title="文件头"></a>文件头</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">readelf -h hello.o </span><br><span class="line"><span class="comment">#读取elf文件头；文件头描述文件属性：文件类型、目标硬件、目标操作系统等；</span></span><br><span class="line">- ELF 魔数。</span><br><span class="line">- 文件机器字节长度。</span><br><span class="line">- 数据存储方式。</span><br><span class="line">- 版本。</span><br><span class="line">- 运行平台。</span><br><span class="line">- ABI 版本。</span><br><span class="line">- ELF 重定位类型。</span><br><span class="line">- 硬件平台。</span><br><span class="line">- 硬件平台版本。</span><br><span class="line">- 入口地址（目标文件入口地址为 0，只有相对位置）。</span><br><span class="line">- 程序的入口和长度。</span><br><span class="line">- 段表的位置和长度。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/image_R3rXd-Wqm-.png"></p>
+<p><img src="/image/image_y9RNrr9HSX.png"></p>
+<h2 id="逻辑段表"><a href="#逻辑段表" class="headerlink" title="逻辑段表"></a>逻辑<strong>段表</strong></h2><p><img src="/image/image_e4xoVFJsqZ.png"></p>
+<p>readelf -S f1或objdump -h f1查看段表属性</p>
+<p><img src="/image/image_FyB2rpFAvp.png"></p>
+<p><img src="/image/image_U9l0DJAWpJ.png"></p>
+<h2 id="代码段（-text）"><a href="#代码段（-text）" class="headerlink" title="代码段（.text）"></a>代码段（.text）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#C 编译后的机器指令保存在代码段（.text）； </span></span><br><span class="line">objdump -ds hello.o | grep -A 9 -E <span class="string">&#x27;main:&gt;|f:&gt;&#x27;</span><span class="comment">#-d输出汇编源码;-s 16进制显示；过滤main和f函数</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/image_-mG7-kZwwz.png"></p>
+<p><img src="/image/image_0taojPzF2G.png"></p>
+<h2 id="数据段（-data）"><a href="#数据段（-data）" class="headerlink" title="数据段（.data）"></a>数据段（.data）</h2><p>保存非零初始化全局变量和局部静态变量</p>
+<p><img src="/image/image_nXnR1PIlZ8.png"></p>
+<h2 id="只读数据段（-rodata）"><a href="#只读数据段（-rodata）" class="headerlink" title="只读数据段（.rodata）"></a>只读数据段（.rodata）</h2><p>const 修饰的变量和字符串常量（包括 printf 函数中的格式化字符串%d）;可以通过优化.rodata 段的大小，进而优化程序的大小</p>
+<p><img src="/image/image_GyCTpHeHBT.png"></p>
+<h2 id="bss-段"><a href="#bss-段" class="headerlink" title="bss 段"></a>bss 段</h2><p>记录零初始化全局变量&#x2F;局部静态变量大小总和；并预留位置，最终链接时在分配到.bss段（具体和编译器有关）</p>
+<h2 id="符号表段（-symtab）"><a href="#符号表段（-symtab）" class="headerlink" title="符号表段（.symtab）"></a>符号表段（.symtab）</h2><p><img src="https://pic3.zhimg.com/80/v2-19eb0bd6897bd2eb201f1f8a8b11a5a6_720w.webp"></p>
+<p>以数组结构形式保存符号信息（函数和变量），符号值即地址。</p>
+<p>readelf -s查看段表属性：name符号名称；Ndx:所处段；Type:符号类型；value:首字节在段内的偏移量<br>eg:<br>f 和 main 函数的 Ndx 对应的值是 1，表示在.text 段（.text 段在段表中的索引是 1）,类型为 FUNC，value 分别是 0x00000000 和 0x00000040，表明两个函数指令字节码的首字节分别在.text 的 0x00000000 和 0x00000040 偏移处。</p>
+<p>printf 的 Ndx 是 UND，表明这个符号在 object_file.o 里面没有被定义，仅仅是引用。</p>
+<p>static_val.1843 和 gint_val 两个符号的 Ndx 都是 3，说明他们都被定义在数据段。value 分别是 0x00000000 和 0x00000004，表明两个函数指令字节码的首字节分别在.data 的 0x00000000 和 0x00000004 偏移处。</p>
+<h2 id="comment"><a href="#comment" class="headerlink" title=".comment"></a>.comment</h2><p>存放编译器版本信息</p>
+<h2 id="符号表-shstrtab-：Section-String-table"><a href="#符号表-shstrtab-：Section-String-table" class="headerlink" title="符号表(.shstrtab)：Section String table"></a>符号表(.shstrtab)：Section String table</h2><p>存放符号的名称字符串</p>
+<h2 id="dynamic"><a href="#dynamic" class="headerlink" title=".dynamic"></a>.dynamic</h2><p>动态链接信息</p>
+<h2 id="重定位代码段（-rel-text）"><a href="#重定位代码段（-rel-text）" class="headerlink" title="重定位代码段（.rel.text）"></a>重定位代码段（.rel.text）</h2><p>描述在重定位时连接器如何修改相应段里的内容。对于.text，对应的重定位表是.rel.text。使用objdump -r 查看重定位表。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-ab4bf8b83a7cf4ec8f2f9496d24ed319_720w.webp"></p>
+<h2 id="自定义段表"><a href="#自定义段表" class="headerlink" title="自定义段表"></a><strong>自定义段表</strong></h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*GCC 编译出来的目标文件默认放到.text ，全局变量和静态变量默认放到.data 和.bss 段。但有时我们希望有些变量或代码可以放到指定的段中，以实现某些特定功能。*/</span></span><br><span class="line"><span class="comment">//GCC 指定段扩展机制:全局变量或者函数前加入 _attribute_((section(&quot;name&quot;))) 属性就可把变量或函数放入到”name“段</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//把变量放到start_var_init段：</span></span><br><span class="line">__attribute__((section(<span class="string">&quot;start_var_init&quot;</span>))) <span class="type">int</span> init_status = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//把函数放到start_fun_init段：</span></span><br><span class="line">__attribute__((section(<span class="string">&quot;start_fun_init&quot;</span>))) <span class="type">void</span> <span class="title function_">start_func</span><span class="params">()</span>&#123;    </span><br><span class="line">    <span class="comment">//init code    </span></span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//查看段表中的符号名字符串表shstrtab确认:readelf -s</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/image_sma3mLOaUm.png"></p>
+<p><img src="/image/image_R_bVlgz6df.png"></p>
+<h1 id="文件系统基本组成"><a href="#文件系统基本组成" class="headerlink" title="文件系统基本组成"></a>文件系统基本组成</h1><p><img src="/image/image_APl8uir-hH.png"></p>
+<p>文件系统由2个数据结构维护：<strong>dientry</strong>→inode→盘块中存储的文件内容（目录文件的文件内容是子目录和文件信息）<br>1）<strong>目录项</strong><em><strong>directory entry</strong></em>**（dientry）**:{文件名，inode，与其他目录项的层级关系…};<strong>是由内核维护的数据结构，不存放于磁盘，缓存在内存</strong><br>2）<em><strong>index node</strong></em><strong>（</strong>inode**） **:记录文件的属性:inode 编号、权限、类型、大小、时间、用户、盘块位置等;多数的inode都存储在磁盘上。少量常用、近期使用的inode会被缓存到内存中</p>
+<p>硬链接的实现就是多个目录项中的索引节点指向同一个文件</p>
+<p>磁盘进行格式化会被分成三个存储区域<br>1）超级块：存储文件系统的详细信息，比如块个数、块大小、空闲块等<br>2）索引节点区<br>3）数据块区<br>当文件系统挂载时超级块区加载进内存；当文件被访问时索引节点区进入内存</p>
+<h1 id="虚拟文件系统Virtual-File-System，VFS接口"><a href="#虚拟文件系统Virtual-File-System，VFS接口" class="headerlink" title="虚拟文件系统Virtual File System，VFS接口"></a>虚拟文件系统<em><strong>Virtual File System，VFS</strong></em>接口</h1><p>win常见的文件系统：fat32  ntfs  exfat&#x20;<br>linux常见：<br>1)磁盘文件系统: 它是直接把数据存储在磁盘中，比如 Ext 2&#x2F;3&#x2F;4、XFS 等都是这类文件系统。<br>2)内存文件系统: 这类文件系统的数据不是存储在硬盘的，而是占用内存空间，我们经常用到的 <code>/proc</code> 和 <code>/sys</code> 文件系统都属于这一类，读写这类文件，实际上是读写内核中相关的数据数据。<br>3)网络文件系统:用来访问其他计算机主机数据的文件系统，比如 NFS、SMB 等等。</p>
+<p>文件系统的种类众多，故在其上定义了<strong>统一接口</strong>标准vfs<br>文件系统首先要先挂载到某个目录才可以正常使用，比如 Linux 系统在启动时，会把文件系统挂载到根目录。</p>
+<p><img src="/image/image_SoU77l0gee.png"></p>
+<p>系统调用要经过两层接口：</p>
+<p><img src="/image/image_sgp3QStLIm.png"></p>
+<p>vfs接口层核心封装:file、dentry、inode、super_block结构体协同工作以实现对各种文件系统的访问和操作</p>
+<p><img src="/image/image_WG1yi2l4ZM.png"></p>
+<p>PCB</p>
+<ul>
+<li>File<ul>
+<li>dientry<ul>
+<li>Inode<ul>
+<li>super_block</li>
+</ul>
+</li>
+<li>inode_operations</li>
+</ul>
+</li>
+<li>file_operations</li>
+</ul>
+</li>
+</ul>
+<p>进程控制块（Process Control Block，PCB）中维护着一份文件描述符表。索引为文件描述符，表项中FILE*指向维护已打开的文件的file结构体</p>
+<p>file结构体指向file_operations结构体，其中的成员都是函数指针，指向各种文件操作的内核函数</p>
+<p>file结构体指向dentry结构体，dentry结构体指向inode结构体；</p>
+<p>inode结构体指向inode_operations结构体，其中的成员都是函数指针，指向影响文件和目录布局的函数</p>
+<p>inode结构体指向super_block结构体，super_block结构体保存着该文件系统的超级块信息，例如文件系统类型、块大小等。同时，super_block结构体的s_root成员是一个指向dentry的指针，表示该文件系统的根目录被挂载到了哪里。</p>
+<p>eg:把fd传入fopen()<br>1）fopen根据文件描述符找到打开文件信息的file结构体；<br>2）从dentry获取全局信息和磁盘数据位置<br>3）调用file_operations结构体中的open函数</p>
+<h1 id="磁盘上文件系统"><a href="#磁盘上文件系统" class="headerlink" title="磁盘上文件系统"></a>磁盘上文件系统</h1><h2 id="磁盘上的文件系统结构"><a href="#磁盘上的文件系统结构" class="headerlink" title="磁盘上的文件系统结构"></a>磁盘上的文件系统结构</h2><p><img src="/image/image_GkiPYIRBcr.png"></p>
+<p>Linux 文件系统由多个块组组成。<strong>每个</strong>块组包含<br>超级块：文件系统全局信息；inode 总数、块总数；各块组 inode 数、块数；文件系统版本号、上次<code>mount</code>的时间等<br>块组描述符表：块组描述符存储当前块组信息；空闲块和空闲 inode 总数，从哪里开始是inode表，数据块等；表中有多个块组描述符<br>数据块区：包含文件有用数据<br>inode列表 ：数据块区中各文件都有一个Inode；其记录文件属性(inode 编号、权限、类型、大小、时间、用户、盘块位置、索引信息等）<br>数据块&#x2F;inode 位图：对应数据块或 inode空间 是空闲，还是被使用中</p>
+<p><strong>超级块和块组描述符表</strong>在许多块组开头都有一份拷贝，原因是系统崩溃后；如果有冗余的副本，该信息是可能恢复的。 - 通过使文件和管理数据尽可能接近，减少了磁头寻道和旋转，这可以提高文件系统的性能</p>
+<p>Ext2 的后续版本采用了稀疏技术。只写入到块组 0、块组 1 和其他 ID 可以表示为 3、 5、7 的幂的块组中；减少了磁盘空间的占用</p>
+<h2 id="文件存储"><a href="#文件存储" class="headerlink" title="文件存储"></a>文件存储</h2><p>非连续存储：即文件数据块链式存储的关键，是要用节点指针&#x2F;额外建立的数据结构存储节点关系</p>
+<h3 id="连续存储"><a href="#连续存储" class="headerlink" title="连续存储"></a>连续存储</h3><p><strong>inode需指定「起始块的位置」和「长度」</strong>；<br><strong>优点：读写效率高</strong>，一次磁盘寻道就可读出整个文件<br>缺点：<br>「磁盘碎片」:连续存储文件被删除产生磁盘碎片；存储文件长度要小于磁盘碎片才能存入<br>「文件长度不易扩展」:文件扩展后长度如果＞所在连续空闲空间长度，则不能扩展或扩展非常耗时</p>
+<h3 id="隐式链表（指针存储数据块节点关系）"><a href="#隐式链表（指针存储数据块节点关系）" class="headerlink" title="隐式链表（指针存储数据块节点关系）"></a>隐式链表（指针存储数据块节点关系）</h3><p>隐式链表形式：文件头Inode存储起始块和末尾块指针；数据块有一个指针指向下一块；<br>数据块指针会多消耗一些磁盘空间；且通过指针遍历节点的方式访问文件；O(节点数)时间复杂度</p>
+<h3 id="显式链表（文件分配表存储数据块节点关系）"><a href="#显式链表（文件分配表存储数据块节点关系）" class="headerlink" title="显式链表（文件分配表存储数据块节点关系）"></a>显式链表（<strong>文件分配表</strong>存储数据块节点关系）</h3><p>Inode存储起始块；内存中开辟<strong>文件分配表（</strong><em><strong>File Allocation Table，FAT</strong></em><strong>）</strong>；数据块号：下个块号的数组；<br>缺点是大磁盘有太多块，fat将会很占内存；优点是查找文件是在内存中进行，文件检索效率加快；支撑随机访问<br>eg:<br>文件A为4-7-2-10-12–1;</p>
+<p><img src="/image/image_r0gv14yvR6.png"></p>
+<h3 id="索引块（索引块存储数据块节点关系表）"><a href="#索引块（索引块存储数据块节点关系表）" class="headerlink" title="索引块（索引块存储数据块节点关系表）"></a>索引块（索引块存储数据块节点关系<strong>表</strong>）</h3><p>Inode存储索引块指针（索引块可以是1个，或链式，树状多级的多个）→磁盘<strong>索引块</strong>维护的数据块指针；支撑随机访问</p>
+<p>若文件大到一个索引数据块放不下索引信息，使用以下两种</p>
+<h3 id="链式索引存储（链式索引块存储数据块节点关系）"><a href="#链式索引存储（链式索引块存储数据块节点关系）" class="headerlink" title="链式索引存储（链式索引块存储数据块节点关系）"></a>链式索引存储（链式索引块存储数据块节点关系）</h3><p>Inode存储首个索引块指针，索引块存储文件数据块指针和下一个索引块指针，当索引块存满，就可通过指针找到下一索引块。这种方式会出现链表普遍的问题：万一某个指针损坏了，后面的数据就无法读取了</p>
+<p><img src="/image/image_dzTRr3bswL.png"></p>
+<h3 id="多级索引存储：（多叉树存储数据块节点关系）"><a href="#多级索引存储：（多叉树存储数据块节点关系）" class="headerlink" title="多级索引存储：（多叉树存储数据块节点关系）"></a><strong>多级索引</strong>存储：（多叉树存储数据块节点关系）</h3><p><img src="/image/image_uk0yGIxi1g.png"></p>
+<p><img src="/image/image_Nb6iICv1L1.png"></p>
+<p>Linux  Ext 2&#x2F;3文件系统存储方式：<br>根据文件的大小，存放的方式会有所变化：<br>文件所需数据块小于 10 ，则采用直接查找的方式；（Inode指向连续数据块）<br>文件所需数据块超过 10 ，则采用一级间接索引方式；（数据块链式存储，索引块维护数据块指针）<br>前两种方式都不够存放大文件，则采用二级间接索引方式；<br>二级索引也不够存放大文件，采用三级间接索引方式；</p>
+<p><img src="/image/image_HOAl9ipYMl.png"></p>
+<h3 id="目录文件存储"><a href="#目录文件存储" class="headerlink" title="目录文件存储"></a>目录文件存储</h3><p>磁盘上的目录文件数据块存储文件&#x2F;子目录信息<br>1)默认有.和..两个文件的（Inode,文件类型，文件名）信息<br>2)其他文件的信息都存在一张哈希表中(文件名：文件信息所在块号)</p>
+<p>目录查询是通过在磁盘上反复搜索完成，需要不断地进行 I&#x2F;O 操作，开销较大。所以，为了减少 I&#x2F;O 操作，把当前使用的文件目录缓存在内存，以后要使用该文件时只要在内存中操作，从而降低了磁盘操作次数，提高了文件系统的访问速度</p>
+<p><img src="/image/image_9AP0mFFLdu.png"></p>
+<h2 id="空闲空间管理"><a href="#空闲空间管理" class="headerlink" title="空闲空间管理"></a>空闲空间管理</h2><p>空闲表法：为空闲空间建一张表，内容为该空闲区第一个块号和连续空闲块数；<br>当请求分配磁盘空间时，系统依次扫描空闲表里的内容，直到找到合适空闲区域；<br>当用户撤销一个文件时，系统回收文件空间；os顺序扫描空闲表找一个空闲表条目并将释放空间的第一个物理块号及它占用的块数填到这个条目中;<br>缺点：<br>当有大量离散分布的空闲区，空闲表将很大，查询效率会很低。另外，这种分配技术适用于建立连续文件。</p>
+<p><img src="/image/image_tPEkEry1o2.png"></p>
+<p>空闲链表法：每个空闲块里有一个指针指向下一个空闲块;主存中保存一个指针指向第一个空闲块<br>创建文件时:从链头上依次取下需要的块。<br>回收空间时：把这些空闲块依次接到链头上</p>
+<p>缺点：不能随机访问，在链上增加或移动空闲块时需要做很多 I&#x2F;O 操作，工作效率低；同时数据块的指针消耗了一定的存储空间。</p>
+<p><img src="/image/image_7mIDy-q5h0.png"></p>
+<p>位图法（Linux 文件系统采用）：二进制每位都表示磁盘中1个盘块的使用情况，0&#x3D;空闲；1&#x3D;已分配；<br>空闲Inode位图和空闲数块位图管理磁盘数据空闲块和 inode 空闲块</p>
+<h1 id="软硬链接"><a href="#软硬链接" class="headerlink" title="软硬链接"></a>软硬链接</h1><p>硬链接是**多个文件的dientry的「索引节点」**指向同一个 inode;即指向同一文件；<br><strong>只有删除所有硬链接及原文件对inode的索引，系统才会彻底删除该文件</strong></p>
+<p><img src="/image/image_XIeDjlmue4.png"></p>
+<p>软链接创建有<strong>独立的 inode</strong>的文件，但<strong>文件内容是另一文件的路径</strong>，所以访问软链接的时候，实际上相当于访问到了另外一个文件，所以<strong>软链接是可跨文件系统的</strong></p>
+<p><img src="/image/image_r1yADyjkt3.png"></p>
+<h1 id="文件操作posix"><a href="#文件操作posix" class="headerlink" title="文件操作posix"></a>文件操作posix</h1><h2 id="stat-access-utime"><a href="#stat-access-utime" class="headerlink" title="stat&#x2F;access&#x2F;utime"></a>stat&#x2F;access&#x2F;utime</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stat</span> &#123;</span></span><br><span class="line">    <span class="type">dev_t</span>     st_dev;     <span class="comment">/* 设备号（主设备号，次设备号）*/</span></span><br><span class="line">    <span class="type">ino_t</span>     st_ino;     <span class="comment">/* inode的数量 */</span></span><br><span class="line">    <span class="type">mode_t</span>    st_mode;    <span class="comment">/* 文件的类型和存取的权限 */</span></span><br><span class="line">    <span class="type">nlink_t</span>   st_nlink;   <span class="comment">/* 硬链接的数量 */</span></span><br><span class="line">    <span class="type">uid_t</span>     st_uid;     <span class="comment">/* 所用者的uid */</span></span><br><span class="line">    <span class="type">gid_t</span>     st_gid;     <span class="comment">/* 所有者的组id */</span></span><br><span class="line">    <span class="type">dev_t</span>     st_rdev;    <span class="comment">/* device ID (if special file) */</span></span><br><span class="line">    <span class="type">off_t</span>     st_size;    <span class="comment">/* 总大小,字节数 */</span></span><br><span class="line">    <span class="type">blksize_t</span> st_blksize; <span class="comment">/* blocksize for filesystem I/O */</span></span><br><span class="line">    <span class="type">blkcnt_t</span>  st_blocks;  <span class="comment">/* number of 512B blocks allocated */</span></span><br><span class="line">    <span class="type">time_t</span>    st_atime;   <span class="comment">/* 最后访问时间（access）*/</span></span><br><span class="line">    <span class="type">time_t</span>    st_mtime;   <span class="comment">/* 最后修改时间（modification）文件内容的改动时间 */</span></span><br><span class="line">    <span class="type">time_t</span>    st_ctime;   <span class="comment">/* 最后改动时间（change）文件属性的改动时间 */</span></span><br><span class="line">&#125;;</span><br><span class="line">============================================================================================</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//根据传入文件路径读取文件的inode，把inode文件属性填入一个struct stat结构体传出给调用者。</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">stat/fstat检查符号链接时，检查的是符号链接所引用的文件</span></span><br><span class="line"><span class="comment">lstat检查符号链接时，检查的是符号链接本身</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*实现原理：假设传入路径/opt/file</span></span><br><span class="line"><span class="comment">1）读出inode表中第2项，即根目录inode，并找到根目录数据块位置</span></span><br><span class="line"><span class="comment">2）从根目录的数据块中找出文件名为opt的记录，从记录中读出它的inode号</span></span><br><span class="line"><span class="comment">3）读出opt目录的inode，从中找出它的数据块的位置</span></span><br><span class="line"><span class="comment">4）从opt目录的数据块中找出文件名为file的记录，从记录中读出它的inode号</span></span><br><span class="line"><span class="comment">5）读出file文件的inode</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> stat(<span class="type">const</span> <span class="type">char</span> *path, <span class="keyword">struct</span> stat *buf);</span><br><span class="line"><span class="type">int</span> <span class="title function_">fstat</span><span class="params">(<span class="type">int</span> fd, <span class="keyword">struct</span> stat *buf)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">lstat</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="keyword">struct</span> stat *buf)</span>;</span><br><span class="line"></span><br><span class="line">@ret:成功返回<span class="number">0</span>；失败返回<span class="number">-1</span>，并设置相应errno的值</span><br><span class="line">============================================================================================</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//检查执行当前进程的用户访问pathname是否有mode权限</span></span><br><span class="line"><span class="comment">//实现：access函数取出文件inode中的st_mode字段，比较一下访问权限</span></span><br><span class="line"><span class="type">int</span> access(<span class="type">const</span> <span class="type">char</span> * pathname,  <span class="type">int</span> mode);</span><br><span class="line"></span><br><span class="line">@mode:</span><br><span class="line"><span class="number">06</span> 检查读写权限</span><br><span class="line">R_OK/<span class="number">04</span> 检查读权限(目录的读是能否ls)</span><br><span class="line">W_OK/<span class="number">02</span> 检查写权限</span><br><span class="line">X_OK /<span class="number">01</span> 检查执行权限(目录的执行是cd)</span><br><span class="line">F_OK/<span class="number">00</span> 检查文件的存在性</span><br><span class="line"></span><br><span class="line">@ret:返回<span class="number">0</span>表示允许访问，返回<span class="number">-1</span>表示错误或不允许访问；并设置erno:</span><br><span class="line">EACCESS  参数pathname 所指定的文件不符合所要求测试的权限。</span><br><span class="line">EROFS   欲测试写入权限的文件存在于只读文件系统内。</span><br><span class="line">EFAULT  参数pathname指针超出可存取内存空间。</span><br><span class="line">EINVAL  参数mode 不正确。</span><br><span class="line">ENAMETOOLONG  参数pathname太长。</span><br><span class="line">ENOTDIR  参数pathname为一目录。</span><br><span class="line">ENOMEM  核心内存不足    </span><br><span class="line">ELOOP   参数pathname有过多符号连接问题。</span><br><span class="line">EIO I/O  存取错误。</span><br><span class="line">============================================================================================</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="chown-chmod-utime-truncate"><a href="#chown-chmod-utime-truncate" class="headerlink" title="chown&#x2F;chmod&#x2F;utime&#x2F;truncate"></a>chown&#x2F;chmod&#x2F;utime&#x2F;truncate</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//改变文件所有者和组，即修改inode中的User和Group字段，只有超级用户才能正确调用这几个函数</span></span><br><span class="line"><span class="comment">/*差异：</span></span><br><span class="line"><span class="comment">chown、fchown修改符号链接时，修改符号链接指向的文件的权限</span></span><br><span class="line"><span class="comment">lchown修改软链接时，修改的是符号链接权限。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">chown</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">uid_t</span> owner, <span class="type">gid_t</span> group)</span>;<span class="comment">//posix</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fchown</span><span class="params">(<span class="type">int</span> fd, <span class="type">uid_t</span> owner, <span class="type">gid_t</span> group)</span>;<span class="comment">//ansi</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">lchown</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">uid_t</span> owner, <span class="type">gid_t</span> group)</span>;</span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//改变文件的访问权限，也就是修改inode中的st_mode字段</span></span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//改变文件的访问时间和修改时间，也就是修改inode中的atime和mtime字段</span></span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//把文件截断到某个长度，若比原来短，则后面的数据被截掉了，比原来长，则后面多出来的部分用0填充，这需要修改inode中的Blocks索引项以及块位图中相应的bit</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="link-symlink-unlink-readlink"><a href="#link-symlink-unlink-readlink" class="headerlink" title="link&#x2F;symlink&#x2F;unlink&#x2F;readlink"></a>link&#x2F;symlink&#x2F;unlink&#x2F;readlink</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建硬链接，其原理是在目录的数据块中添加一条新记录，其中的inode号字段和原文件相同</span></span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//创建一个符号链接，这需要创建一个新的inode，其中st_mode字段的文件类型是符号链接，原文件的路径保存在inode中或者分配一个数据块来保存</span></span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//删除一个链接。如果是符号链接则释放这个符号链接的inode和数据块，清除inode位图和块位图中相应的位。如果是硬链接则从目录的数据块中清除一条文件名记录，如果当前文件的硬链接数已经是1了还要删除它，就同时释放它的inode和数据块，清除inode位图和块位图中相应的位</span></span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//读取一个符号链接所指向的目标路径，其原理是从符号链接的inode或数据块中读出保存的数据，这就是目标路径</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="rename"><a href="#rename" class="headerlink" title="rename"></a>rename</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">//给文件改名，移动文件位置</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">rename</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *oldpath, <span class="type">const</span> <span class="type">char</span> *newpath)</span>;</span><br><span class="line"></span><br><span class="line">@ret:成功返回<span class="number">0</span>，失败返回<span class="number">-1</span>，并设置相应errno</span><br><span class="line"></span><br><span class="line"><span class="comment">//改变文件名，需要修改目录数据块中的文件名记录，如果原文件名和新文件名不在一个目录下则需要从原目录数据块中清除一条记录然后添加到新目录的数据块中。mv(1)命令是基于rename函数实现的，因此在同一分区的不同目录中移动文件并不需要复制和删除文件的inode和数据块，只需要一个改名操作，即使要移动整个目录，这个目录下有很多子目录和文件也要随着一起移动，移动操作也只是对顶级目录的改名操作，很快就能完成。但是，如果在不同的分区之间移动文件就必须复制和删除inode和数据块，如果要移动整个目录，所有子目录和文件都要复制删除，这就很慢了</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="basename-dirname"><a href="#basename-dirname" class="headerlink" title="basename&#x2F; dirname"></a><strong>basename&#x2F;</strong> dirname</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;libgen.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">char</span> *<span class="title function_">dirname</span><span class="params">(<span class="type">char</span> *path)</span>;</span><br><span class="line"><span class="type">char</span> *<span class="title function_">basename</span><span class="params">(<span class="type">char</span> *path)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>mkdir&#x2F;rmdir</p>
+<h2 id="opendir-closedir"><a href="#opendir-closedir" class="headerlink" title="opendir&#x2F;closedir"></a>opendir&#x2F;closedir</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> &#123;</span></span><br><span class="line">  <span class="type">ino_t</span>          d_ino;       <span class="comment">/* inode number */</span></span><br><span class="line">  <span class="type">off_t</span>          d_off;       <span class="comment">/* offset to the next dirent */</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">short</span> d_reclen;    <span class="comment">/* length of this record */</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span>  d_type;      <span class="comment">/* type of file */</span></span><br><span class="line">  <span class="type">char</span>           d_name[<span class="number">256</span>]; <span class="comment">/* filename */</span></span><br><span class="line">&#125;;</span><br><span class="line">============================================================================================</span><br><span class="line"><span class="comment">//根据目录的路径字符串，返回一个DIR指针</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//关闭DIR指针所指向的目录流</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="seekdir"><a href="#seekdir" class="headerlink" title="seekdir"></a>seekdir</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将DIR指针所指向的目录流偏移跳跃到某一位置</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="readdir"><a href="#readdir" class="headerlink" title="readdir"></a>readdir</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据DIR指针，返回DIR指针所指向的目录项的指针（dirent *）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="telldir"><a href="#telldir" class="headerlink" title="telldir"></a>telldir</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回DIR指针所指向目录流的当前位置（long类型）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="getcwd"><a href="#getcwd" class="headerlink" title="getcwd"></a>getcwd</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">char</span> *<span class="title function_">getcwd</span><span class="params">(<span class="type">char</span> *buf,<span class="type">size_t</span> size)</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="ex"><a href="#ex" class="headerlink" title="ex"></a>ex</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归列出目录下文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;dirent.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_PATH 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* dirwalk:  apply fcn to all files in dir */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">dirwalk</span><span class="params">(<span class="type">char</span> *dir, <span class="type">void</span> (*fcn)(<span class="type">char</span> *))</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> name[MAX_PATH];</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">dirent</span> *<span class="title">dp</span>;</span></span><br><span class="line">  DIR *dfd;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ((dfd = opendir(dir)) == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;dirwalk: can&#x27;t open %s\n&quot;</span>, dir);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> ((dp = readdir(dfd)) != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(dp-&gt;d_name, <span class="string">&quot;.&quot;</span>) == <span class="number">0</span></span><br><span class="line">        || <span class="built_in">strcmp</span>(dp-&gt;d_name, <span class="string">&quot;..&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">      <span class="keyword">continue</span>;    <span class="comment">/* skip self and parent */</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(dir)+<span class="built_in">strlen</span>(dp-&gt;d_name)+<span class="number">2</span> &gt; <span class="keyword">sizeof</span>(name))</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;dirwalk: name %s %s too long\n&quot;</span>,</span><br><span class="line">        dir, dp-&gt;d_name);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">sprintf</span>(name, <span class="string">&quot;%s/%s&quot;</span>, dir, dp-&gt;d_name);</span><br><span class="line">      (*fcn)(name);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  closedir(dfd);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* fsize:  print the size and name of file &quot;name&quot; */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">fsize</span><span class="params">(<span class="type">char</span> *name)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">stat</span> <span class="title">stbuf</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (stat(name, &amp;stbuf) == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;fsize: can&#x27;t access %s\n&quot;</span>, name);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ((stbuf.st_mode &amp; S_IFMT) == S_IFDIR)</span><br><span class="line">    dirwalk(name, fsize);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%8ld %s\n&quot;</span>, stbuf.st_size, name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (argc == <span class="number">1</span>)  <span class="comment">/* default: current directory */</span></span><br><span class="line">    fsize(<span class="string">&quot;.&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">while</span> (--argc &gt; <span class="number">0</span>)</span><br><span class="line">      fsize(*++argv);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这个程序还是不如ls -R健壮，它有可能死循环，思考一下什么情况会导致死循环</span></span><br></pre></td></tr></table></figure>
+
+<p>文件组织；文件保护；文件映射，文件共享</p>
+<p>readelf -h hello.o读取</p>
+
+    </div>
+
+    
+    
+    
+    
+    
+      <div>
+        
+    <div style="text-align:center;color: #ccc;font-size:14px;">
+    ------ The Happy Ending ------</div>
+
+      </div>
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Zeins_XvJin_Shiri 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Zeins_XvJin_Shiri 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Zeins_XvJin_Shiri
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%EF%BC%88%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%89/" title="文件系统（磁盘管理系统）">https://zeinsshiri.github.io/2024/02/07/软件/系统编程/文件系统（磁盘管理系统）/文件系统（磁盘管理系统）/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 软件</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E6%96%87%E4%BB%B6IO/%E6%96%87%E4%BB%B6IO/" rel="prev" title="文件IO">
+                  <i class="fa fa-angle-left"></i> 文件IO
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/07/%E8%BD%AF%E4%BB%B6/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/linux%E6%8C%87%E5%8D%97/linux%E6%8C%87%E5%8D%97/" rel="next" title="linux指南">
+                  linux指南 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81OTQ5OS8zNTk2MQ=="></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024-02 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zeins_XvJin_Shiri</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">330k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:01</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动 -->
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zeinsshiri/" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"mhchem":false,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+  
+  
+<style>
+#selectionCopyright {
+    position: absolute;
+    display: none;
+    background: rgba(244,67,54,.7);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: none;
+    border: none;
+    font-size: 14px;
+}
+#selectionCopyright a{
+    color:#fff;
+    border-color: #fff;
+}
+#selectionCopyright::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent rgba(244,67,54,.7) transparent transparent;
+    position: absolute;
+    left: -8px;
+    top:50%;
+    transform:translateY(-50%);
+}
+</style>
+
+<button id="selectionCopyright" disabled="disabled">本文由Zeins原创并遵循CC4.0，转载请注明出处并链接回原文地址哟</button>
+
+<script>
+window.onload = function() {
+    function selectText() {
+        if (document.selection) { //IE浏览器下
+            return document.selection.createRange().text; //返回选中的文字
+        } else { //非IE浏览器下
+            return window.getSelection().toString(); //返回选中的文字
+        }
+    }
+    var content = document.getElementsByTagName("body")[0];
+    var scTip = document.getElementById('selectionCopyright');
+
+    content.onmouseup = function(ev) { //设定一个onmouseup事件
+        var ev = ev || window.event;
+        var left = ev.clientX;//获取鼠标相对浏览器可视区域左上角水平距离距离
+        var top = ev.clientY;//获取鼠标相对浏览器可视区域左上角垂直距离距离
+        var xScroll = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);//获取文档水平滚动距离
+        var yScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);//获取文档垂直滚动距离
+        if (selectText().length > 0) {
+            setTimeout(function() { //设定一个定时器
+                scTip.style.display = 'inline-block';
+                scTip.style.left = left + xScroll + 15 + 'px';//鼠标当前x值
+                scTip.style.top = top + yScroll - 15 + 'px';//鼠标当前y值
+            }, 100);
+        } else {
+            scTip.style.display = 'none';
+        }
+    };
+
+    content.onclick = function(ev) {
+        var ev = ev || window.event;
+        ev.cancelBubble = true;
+    };
+    document.onclick = function() {
+        scTip.style.display = 'none';
+    };
+};
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":290},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false,"tagMode":false});</script></body>
+</html>
+
+

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zeinsshiri.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+
+    <meta name="description" content="特殊的完全二叉树1）完全二叉树：最底层节点靠左填充，其他层的节点都被填满2.0)存在parent≥subtree或parent≤subtree的关系2.1）「大顶堆 max heap」：任意节点的值 ≥ 其子节点的值2.2）「小顶堆 min heap」：任意节点的值 ≤ 其子节点的值3）根节点称“堆顶”；底层最靠右节点称“堆底”；分别为各自类型的极值  叶节点数计算设完全二叉树有N个节点，度0节点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="堆heap">
+<meta property="og:url" content="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86heap/%E5%A0%86heap/">
+<meta property="og:site_name" content="Zeins&#39;s Blog">
+<meta property="og:description" content="特殊的完全二叉树1）完全二叉树：最底层节点靠左填充，其他层的节点都被填满2.0)存在parent≥subtree或parent≤subtree的关系2.1）「大顶堆 max heap」：任意节点的值 ≥ 其子节点的值2.2）「小顶堆 min heap」：任意节点的值 ≤ 其子节点的值3）根节点称“堆顶”；底层最靠右节点称“堆底”；分别为各自类型的极值  叶节点数计算设完全二叉树有N个节点，度0节点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_Zfcn_a8lVZ.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_aEJyrmZKhZ.png">
+<meta property="og:image" content="https://www.hello-algo.com/chapter_heap/heap.assets/representation_of_heap.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_SxHcQgIndb.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_4K-7pAPQQv.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_FWcQ9b7mcM.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_Ylr-e--hC5.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_0NNgoRNpa6.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_qskVR3Dmkv.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_xDCfzlSiXi.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_qLzcndJi_n.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_hDTdCm02Gt.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_rTIHt1vvRv.png">
+<meta property="og:image" content="https://www.hello-algo.com/chapter_heap/top_k.assets/top_k_traversal.png">
+<meta property="og:image" content="https://www.hello-algo.com/chapter_heap/top_k.assets/top_k_sorting.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_ye0ArEpLcQ.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_NVRPnmqBI1.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_K3y7jS6sRA.png">
+<meta property="og:image" content="https://zeinsshiri.github.io/image/image_sChWlhai9w.png">
+<meta property="article:published_time" content="2024-02-07T09:18:48.000Z">
+<meta property="article:modified_time" content="2024-02-08T08:41:19.199Z">
+<meta property="article:author" content="Zeins_XvJin_Shiri">
+<meta property="article:tag" content="数据结构&amp;算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zeinsshiri.github.io/image/image_Zfcn_a8lVZ.png">
+
+
+<link rel="canonical" href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86heap/%E5%A0%86heap/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86heap/%E5%A0%86heap/","path":"2024/02/07/软件/数据结构&算法/堆heap/堆heap/","title":"堆heap"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>堆heap | Zeins's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/rss2.xml" title="Zeins's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Zeins's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">笔记直接导入的，排版稍差，得有时间再处理</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%B6%E8%8A%82%E7%82%B9%E6%95%B0%E8%AE%A1%E7%AE%97"><span class="nav-text">叶节点数计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-text">堆常用操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%AE%9E%E7%8E%B0"><span class="nav-text">堆实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x20-%E5%A0%86%E5%AD%98%E5%82%A8%E4%B8%8E%E8%A1%A8%E7%A4%BA"><span class="nav-text"> 堆存储与表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E5%85%A5%E5%A0%86O-h"><span class="nav-text">元素入堆O(h)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E9%A1%B6%E5%85%83%E7%B4%A0%E5%87%BA%E5%A0%86O-h"><span class="nav-text">堆顶元素出堆O(h)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%A0%86%E9%A1%B6%E5%85%83%E7%B4%A0O-1"><span class="nav-text">访问堆顶元素O(1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E5%A0%86"><span class="nav-text">建堆</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#x20-%E5%80%9F%E5%85%A5%E5%A0%86%E6%93%8D%E4%BD%9C%E5%AE%9E%E7%8E%B0O-nlog%E2%81%A1n-x20"><span class="nav-text"> 借入堆操作实现O(nlog⁡n) </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#x20-%E9%80%9A%E8%BF%87%E9%81%8D%E5%8E%86%E5%A0%86%E5%8C%96%E5%AE%9E%E7%8E%B0%EF%BC%88%E6%9B%B4%E9%AB%98%E6%95%88%E7%9A%84%E5%BB%BA%E5%A0%86%EF%BC%89"><span class="nav-text"> 通过遍历堆化实现（更高效的建堆）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8"><span class="nav-text">堆常见应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Top-K-Question"><span class="nav-text">Top-K Question</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E9%81%8D%E5%8E%86%E9%80%89%E6%8B%A9"><span class="nav-text">方法一：遍历选择???</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E6%8E%92%E5%BA%8F"><span class="nav-text">方法二：排序??</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E5%A0%86"><span class="nav-text">方法三：堆</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zeins_XvJin_Shiri"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Zeins_XvJin_Shiri</p>
+  <div class="site-description" itemprop="description">在何处付出，便在何处收获</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">134</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zeinsshiri/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zeinsshiri&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:Rennai10000@outlook.com" title="E-Mail → mailto:Rennai10000@outlook.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Zeins_x_Shiri" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Zeins_x_Shiri" rel="noopener me" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml" rel="noopener me"><i class="rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86heap/%E5%A0%86heap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Zeins_XvJin_Shiri">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeins's Blog">
+      <meta itemprop="description" content="在何处付出，便在何处收获">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="堆heap | Zeins's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          堆heap
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-07 17:18:48" itemprop="dateCreated datePublished" datetime="2024-02-07T17:18:48+08:00">2024-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-08 16:41:19" itemprop="dateModified" datetime="2024-02-08T16:41:19+08:00">2024-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构&算法</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>特殊的完全二叉树<br>1）完全二叉树：最底层节点靠左填充，其他层的节点都被填满<br>2.0)存在parent≥subtree或parent≤subtree的关系<br>2.1）「大顶堆 max heap」：任意节点的值 ≥ 其子节点的值<br>2.2）「小顶堆 min heap」：任意节点的值 ≤ 其子节点的值<br>3）根节点称“堆顶”；底层最靠右节点称“堆底”；分别为各自类型的极值</p>
+<p><img src="/image/image_Zfcn_a8lVZ.png"></p>
+<h2 id="叶节点数计算"><a href="#叶节点数计算" class="headerlink" title="叶节点数计算"></a>叶节点数计算</h2><p>设完全二叉树有N个节点，度0节点N0 （叶节点）， 度1节点N1 ， 度2节点 N2&#x20;</p>
+<p>N &#x3D; N0 + N1 + N2</p>
+<p>边 &#x3D; N-1&#x3D;0*<em>N0 + 1</em>*N1 + 2*N2;一节点头上一边除了root</p>
+<p>⇒N0&#x3D;N2+1&#x3D;N-N0-N1+1<br>⇒N0&#x3D;(N-N1+1)&#x2F;2;自此导出了叶节点数与n的关系</p>
+<p>完全二叉树中度为1的节点只会是0个或者1个</p>
+<p><img src="/image/image_aEJyrmZKhZ.png"></p>
+<p>当n1&#x3D;0时；(N-N1+1)能被2整除；<br>当n1&#x3D;1时；(N-N1+1)不能被2整除；；叶节点数量自然是向上取整的</p>
+<h2 id="堆常用操作"><a href="#堆常用操作" class="headerlink" title="堆常用操作"></a>堆常用操作</h2><p>许多编程语言提供的是「优先队列 priority queue」：有优先级排序的队列；<strong>堆通常用作实现优先队列，大顶堆相当于元素按从大到小顺序出队的优先队列</strong>。从使用角度来看，可将“优先队列”和“堆”看作等价的数据结构。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 初始化堆 */</span></span><br><span class="line"><span class="comment">// 初始化小顶堆</span></span><br><span class="line">priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; minHeap;<span class="comment">//中间int值列表存着初始化数据</span></span><br><span class="line"><span class="comment">// 初始化大顶堆</span></span><br><span class="line">priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, less&lt;<span class="type">int</span>&gt;&gt; maxHeap;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 元素入堆 */</span></span><br><span class="line">maxHeap.<span class="built_in">push</span>(<span class="number">1</span>);</span><br><span class="line">maxHeap.<span class="built_in">push</span>(<span class="number">3</span>);</span><br><span class="line">maxHeap.<span class="built_in">push</span>(<span class="number">2</span>);</span><br><span class="line">maxHeap.<span class="built_in">push</span>(<span class="number">5</span>);</span><br><span class="line">maxHeap.<span class="built_in">push</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 获取堆顶元素 */</span></span><br><span class="line"><span class="type">int</span> peek = maxHeap.<span class="built_in">top</span>(); <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 堆顶元素出堆 */</span></span><br><span class="line"><span class="comment">// 出堆元素会形成一个从大到小的序列</span></span><br><span class="line">maxHeap.<span class="built_in">pop</span>(); <span class="comment">// 5</span></span><br><span class="line">maxHeap.<span class="built_in">pop</span>(); <span class="comment">// 4</span></span><br><span class="line">maxHeap.<span class="built_in">pop</span>(); <span class="comment">// 3</span></span><br><span class="line">maxHeap.<span class="built_in">pop</span>(); <span class="comment">// 2</span></span><br><span class="line">maxHeap.<span class="built_in">pop</span>(); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 获取堆大小 */</span></span><br><span class="line"><span class="type">int</span> size = maxHeap.<span class="built_in">size</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 判断堆是否为空 */</span></span><br><span class="line"><span class="type">bool</span> isEmpty = maxHeap.<span class="built_in">empty</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 输入列表并建堆 */</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; input&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>&#125;;</span><br><span class="line">priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">minHeap</span>(input.<span class="built_in">begin</span>(), input.<span class="built_in">end</span>());</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="堆实现"><a href="#堆实现" class="headerlink" title="堆实现"></a>堆实现</h2><p>以大顶堆为例；要转换为小顶堆，只需将所有大小逻辑判断取逆（例如，将 ≥ 替换为 ≤ ）</p>
+<h3 id="x20-堆存储与表示"><a href="#x20-堆存储与表示" class="headerlink" title="&#x20;堆存储与表示"></a>&#x20;堆存储与表示</h3><p>数组元素存节点值，索引代表节点在二叉树中的位置;给定索引 i ，左子节点索引 2i+1 ，右子节点索引 2i+2 ，父节点索引 (i−1)&#x2F;2（向下取整）。索引越界表示空节点</p>
+<p><img src="https://www.hello-algo.com/chapter_heap/heap.assets/representation_of_heap.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 获取左子节点索引 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">left</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 获取右子节点索引 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">right</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 获取父节点索引 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">parent</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (i - <span class="number">1</span>) / <span class="number">2</span>; <span class="comment">// 向下取整</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="元素入堆O-h"><a href="#元素入堆O-h" class="headerlink" title="元素入堆O(h)"></a>元素入堆O(h)</h3><p>1）将<code>val</code>放到堆底；直接放入是不遵守堆的序结构的；<br>2）堆化 heapify：比较插入节点与父节点是否符合堆序，不符合则交换位置。执行此操作，从底至顶修复堆中的各个节点，直至越过根节点或遇到无须交换的节点时结束</p>
+<p><img src="/image/image_SxHcQgIndb.png"></p>
+<p><img src="/image/image_4K-7pAPQQv.png"></p>
+<p><img src="/image/image_FWcQ9b7mcM.png"></p>
+<p><img src="/image/image_Ylr-e--hC5.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 元素入堆 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(<span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 添加节点</span></span><br><span class="line">    maxHeap.<span class="built_in">push_back</span>(val);</span><br><span class="line">    <span class="comment">// 从底至顶堆化</span></span><br><span class="line">    <span class="built_in">siftUp</span>(<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 从节点 i 开始，从底至顶堆化 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">siftUp</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取节点 i 的父节点</span></span><br><span class="line">        <span class="type">int</span> p = <span class="built_in">parent</span>(i);</span><br><span class="line">        <span class="comment">// 当“越过根节点”或“节点无须修复”时，结束堆化</span></span><br><span class="line">        <span class="keyword">if</span> (p &lt; <span class="number">0</span> || maxHeap[i] &lt;= maxHeap[p])</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// 交换两节点</span></span><br><span class="line">        <span class="built_in">swap</span>(maxHeap[i], maxHeap[p]);</span><br><span class="line">        <span class="comment">// 循环向上堆化</span></span><br><span class="line">        i = p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="堆顶元素出堆O-h"><a href="#堆顶元素出堆O-h" class="headerlink" title="堆顶元素出堆O(h)"></a>堆顶元素出堆O(h)</h3><p>堆顶元素（二叉树根节点），即列表首元素。若直接删除首元素，那所有节点索引都会变化，要重新堆化排序。实际采用以下步骤：</p>
+<ol>
+<li>交换堆顶与堆底元素（交换根节点与最右叶节点）</li>
+<li>交换完成后，将堆底从列表中删除（注意，由于已经交换，实际上删除的是原来的堆顶元素）。</li>
+<li>从根节点开始，从<strong>顶至底堆化</strong>。</li>
+</ol>
+<p><img src="/image/image_0NNgoRNpa6.png"></p>
+<p><img src="/image/image_qskVR3Dmkv.png"></p>
+<p><img src="/image/image_xDCfzlSiXi.png"></p>
+<p><img src="/image/image_qLzcndJi_n.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 元素出堆 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 判空处理</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">isEmpty</span>()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">out_of_range</span>(<span class="string">&quot;堆为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 交换根节点与最右叶节点（即交换首元素与尾元素）</span></span><br><span class="line">    <span class="built_in">swap</span>(maxHeap[<span class="number">0</span>], maxHeap[<span class="built_in">size</span>() - <span class="number">1</span>]);</span><br><span class="line">    <span class="comment">// 删除节点</span></span><br><span class="line">    maxHeap.<span class="built_in">pop_back</span>();</span><br><span class="line">    <span class="comment">// 从顶至底堆化</span></span><br><span class="line">    <span class="built_in">siftDown</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 从节点 i 开始，从顶至底堆化 */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">siftDown</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 判断节点 i, l, r 中值最大的节点，记为 ma</span></span><br><span class="line">        <span class="type">int</span> l = <span class="built_in">left</span>(i), r = <span class="built_in">right</span>(i), ma = i;</span><br><span class="line">        <span class="comment">// 若节点 i 最大或索引 l, r 越界，则无须继续堆化，跳出</span></span><br><span class="line">        <span class="keyword">if</span> (l &lt; <span class="built_in">size</span>() &amp;&amp; maxHeap[l] &gt; maxHeap[ma])</span><br><span class="line">            ma = l;</span><br><span class="line">        <span class="keyword">if</span> (r &lt; <span class="built_in">size</span>() &amp;&amp; maxHeap[r] &gt; maxHeap[ma])</span><br><span class="line">            ma = r;</span><br><span class="line">        <span class="comment">// 若节点 i 最大或索引 l, r 越界，则无须继续堆化，跳出</span></span><br><span class="line">        <span class="keyword">if</span> (ma == i)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="built_in">swap</span>(maxHeap[i], maxHeap[ma]);</span><br><span class="line">        <span class="comment">// 循环向下堆化</span></span><br><span class="line">        i = ma;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="访问堆顶元素O-1"><a href="#访问堆顶元素O-1" class="headerlink" title="访问堆顶元素O(1)"></a>访问堆顶元素O(1)</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 访问堆顶元素 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">peek</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> maxHeap[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="建堆"><a href="#建堆" class="headerlink" title="建堆"></a>建堆</h3><p>在某些情况下，我们希望使用一个列表来构建一个堆</p>
+<h4 id="x20-借入堆操作实现O-nlog⁡n-x20"><a href="#x20-借入堆操作实现O-nlog⁡n-x20" class="headerlink" title="&#x20;借入堆操作实现O(nlog⁡n)&#x20;"></a>&#x20;借入堆操作实现O(nlog⁡n)&#x20;</h4><p>1）创建一个空堆，遍历列表依次对每个元素执行“入堆”(即将元素添加至堆尾，再对该元素“从底至顶”堆化)<br>2)每当一个元素入堆，堆长度加一;每个元素的入堆操作使用 O(log⁡n) 时间，输入n个元素；因此该建堆方法时间复杂度为O(nlog⁡n)&#x20;</p>
+<h4 id="x20-通过遍历堆化实现（更高效的建堆）"><a href="#x20-通过遍历堆化实现（更高效的建堆）" class="headerlink" title="&#x20;通过遍历堆化实现（更高效的建堆）"></a>&#x20;通过遍历堆化实现（更高效的建堆）</h4><ol>
+<li>将初始化列表原封不动添加到堆列表，此时堆的性质尚未得到满足。</li>
+<li>逆层序遍历（对于数组就是倒序遍历），依次对每个非叶节点执行堆化；每个堆化的子树都是合法子堆</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 构造方法，根据输入列表建堆 */</span></span><br><span class="line"><span class="built_in">MaxHeap</span>(vector&lt;<span class="type">int</span>&gt; nums) &#123;</span><br><span class="line">    <span class="comment">// 将列表元素原封不动添加进堆</span></span><br><span class="line">    maxHeap = nums;</span><br><span class="line">    <span class="comment">// 堆化除叶节点以外的其他所有节点</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="built_in">parent</span>(<span class="built_in">size</span>() - <span class="number">1</span>); i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">siftDown</span>(i);<span class="comment">//从2^h-1层开始堆化；parent(size() - 1)为堆底元素的父节点</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>复杂度分析：要堆化节点数量为n-(n-n1+1)&#x2F;2&#x3D;(n+n1-1)&#x2F;2;节点堆化最多要迭代logn次；那么这个操作要O(nlogn);<br>更准确的估算是：$\sum_{1}^{h}{}$h层节点数*h层的节点高度</p>
+<p><img src="/image/image_hDTdCm02Gt.png"></p>
+<h2 id="堆常见应用"><a href="#堆常见应用" class="headerlink" title="堆常见应用"></a>堆常见应用</h2><ul>
+<li><strong>优先队列</strong>：堆通常作为实现优先队列的首选数据结构，其入队和出队操作的时间复杂度均为 O(log⁡n) ，而建队操作为 O(n) ，这些操作都非常高效。</li>
+<li><strong>堆排序</strong>：给定一组数据，我们可以用它们建立一个堆，然后不断地执行元素出堆操作，从而得到有序数据。然而，我们通常会使用一种更优雅的方式实现堆排序，详见后续的堆排序章节。</li>
+<li><strong>获取最大的 k 个元素</strong>：这是一个经典的算法问题，同时也是一种典型应用，例如选择热度前 10 的新闻作为微博热搜，选取销量前 10 的商品等。</li>
+</ul>
+<p><img src="/image/image_rTIHt1vvRv.png"></p>
+<h1 id="Top-K-Question"><a href="#Top-K-Question" class="headerlink" title="Top-K Question"></a>Top-K Question</h1><p>给定一个长度为 n 无序数组 <code>nums</code> ，请返回数组中前k 大的元素。</p>
+<p>对于该问题，我们先介绍两种思路比较直接的解法，再介绍效率更高的堆解法。</p>
+<h2 id="方法一：遍历选择"><a href="#方法一：遍历选择" class="headerlink" title="方法一：遍历选择???"></a>方法一：遍历选择???</h2><p>k轮遍历，分别在每轮中提取第 1、2、…、k 大的元素，时间复杂度为 O(nk) 。</p>
+<p>此方法只适用于k≪n 的情况，因为当 k 与 n 比较接近时，其时间复杂度趋向于 O(n^2) ，非常耗时。</p>
+<p><img src="https://www.hello-algo.com/chapter_heap/top_k.assets/top_k_traversal.png"></p>
+<p>当 k&#x3D;n 时，我们可以得到完整的有序序列，此时等价于“选择排序”算法。</p>
+<h2 id="方法二：排序"><a href="#方法二：排序" class="headerlink" title="方法二：排序??"></a>方法二：排序??</h2><p>对数组 <code>nums</code> 进行排序，再返回最右边的 k 个元素，时间复杂度为 O(nlog⁡n) 。</p>
+<p>显然，该方法“超额”完成任务了，因为我们只需要找出最大的 k 个元素即可，而不需要排序其他元素。</p>
+<p><img src="https://www.hello-algo.com/chapter_heap/top_k.assets/top_k_sorting.png"></p>
+<h2 id="方法三：堆"><a href="#方法三：堆" class="headerlink" title="方法三：堆"></a>方法三：堆</h2><p>1)初始化一个小顶堆,将数组前 k 个元素依次入堆<br>2)遍历数组k+1到size-1的元素；与堆顶比较，大的入堆,原堆顶元素pop；遍历完成后，堆中保存的就是最大的 k个元素</p>
+<p><img src="/image/image_ye0ArEpLcQ.png"></p>
+<p><img src="/image/image_NVRPnmqBI1.png"></p>
+<p><img src="/image/image_K3y7jS6sRA.png"></p>
+<p><img src="/image/image_sChWlhai9w.png"></p>
+<p>最差情况执行了 n 轮入堆和n-k轮出堆，堆的最大长度为 k ，因此时间复杂度为 O(nlog⁡k) 。该方法的效率很高，当 k 较小时，时间复杂度趋向 O(n) ；当 k 较大时，时间复杂度不会超过 O(nlog⁡n) 。</p>
+<p>该方法适用于动态数据流的使用场景。在不断加入数据时，我们可以持续维护堆内的元素，从而实现最大 k 个元素的动态更新。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 基于堆查找数组中最大的 k 个元素 */</span></span><br><span class="line">priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">topKHeap</span>(vector&lt;<span class="type">int</span>&gt; &amp;nums, <span class="type">int</span> k) &#123;</span><br><span class="line">    priority_queue&lt;<span class="type">int</span>, vector&lt;<span class="type">int</span>&gt;, greater&lt;<span class="type">int</span>&gt;&gt; heap;</span><br><span class="line">    <span class="comment">// 将数组的前 k 个元素入堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">        heap.<span class="built_in">push</span>(nums[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 从第 k+1 个元素开始，保持堆的长度为 k</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = k; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="comment">// 若当前元素大于堆顶元素，则将堆顶元素出堆、当前元素入堆</span></span><br><span class="line">        <span class="keyword">if</span> (nums[i] &gt; heap.<span class="built_in">top</span>()) &#123;</span><br><span class="line">            heap.<span class="built_in">pop</span>();</span><br><span class="line">            heap.<span class="built_in">push</span>(nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> heap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+    
+    
+      <div>
+        
+    <div style="text-align:center;color: #ccc;font-size:14px;">
+    ------ The Happy Ending ------</div>
+
+      </div>
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Zeins_XvJin_Shiri 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Zeins_XvJin_Shiri 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Zeins_XvJin_Shiri
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://zeinsshiri.github.io/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86heap/%E5%A0%86heap/" title="堆heap">https://zeinsshiri.github.io/2024/02/07/软件/数据结构&算法/堆heap/堆heap/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 数据结构&算法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%A0%86%E6%8E%92%E5%BA%8F%20heap%20sort%EF%BC%9BO(nlogn)/%E5%A0%86%E6%8E%92%E5%BA%8F%20heap%20sort%EF%BC%9BO(nlogn)/" rel="prev" title="堆排序 heap sort；O(nlogn)">
+                  <i class="fa fa-angle-left"></i> 堆排序 heap sort；O(nlogn)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/07/%E8%BD%AF%E4%BB%B6/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%20radix%20sort;O(n)/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%20radix%20sort;O(n)/" rel="next" title="基数排序 radix sort;O(n)">
+                  基数排序 radix sort;O(n) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81OTQ5OS8zNTk2MQ=="></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024-02 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Zeins_XvJin_Shiri</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">330k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:01</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动 -->
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/zeinsshiri/" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"mhchem":false,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+  
+  
+<style>
+#selectionCopyright {
+    position: absolute;
+    display: none;
+    background: rgba(244,67,54,.7);
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: none;
+    border: none;
+    font-size: 14px;
+}
+#selectionCopyright a{
+    color:#fff;
+    border-color: #fff;
+}
+#selectionCopyright::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent rgba(244,67,54,.7) transparent transparent;
+    position: absolute;
+    left: -8px;
+    top:50%;
+    transform:translateY(-50%);
+}
+</style>
+
+<button id="selectionCopyright" disabled="disabled">本文由Zeins原创并遵循CC4.0，转载请注明出处并链接回原文地址哟</button>
+
+<script>
+window.onload = function() {
+    function selectText() {
+        if (document.selection) { //IE浏览器下
+            return document.selection.createRange().text; //返回选中的文字
+        } else { //非IE浏览器下
+            return window.getSelection().toString(); //返回选中的文字
+        }
+    }
+    var content = document.getElementsByTagName("body")[0];
+    var scTip = document.getElementById('selectionCopyright');
+
+    content.onmouseup = function(ev) { //设定一个onmouseup事件
+        var ev = ev || window.event;
+        var left = ev.clientX;//获取鼠标相对浏览器可视区域左上角水平距离距离
+        var top = ev.clientY;//获取鼠标相对浏览器可视区域左上角垂直距离距离
+        var xScroll = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);//获取文档水平滚动距离
+        var yScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);//获取文档垂直滚动距离
+        if (selectText().length > 0) {
+            setTimeout(function() { //设定一个定时器
+                scTip.style.display = 'inline-block';
+                scTip.style.left = left + xScroll + 15 + 'px';//鼠标当前x值
+                scTip.style.top = top + yScroll - 15 + 'px';//鼠标当前y值
+            }, 100);
+        } else {
+            scTip.style.display = 'none';
+        }
+    };
+
+    content.onclick = function(ev) {
+        var ev = ev || window.event;
+        ev.cancelBubble = true;
+    };
+    document.onclick = function() {
+        scTip.style.display = 'none';
+    };
+};
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":290},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false,"tagMode":false});</script></body>
+</html>
+
+
